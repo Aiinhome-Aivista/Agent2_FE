@@ -14,6 +14,7 @@ export const appConfig = {
     welcome: '/welcome',
     login: '/login',
     dashboard: '/dashboard',
+    teamLeadDashboard: '/team-lead',
     incidents: '/incidents',
     incidentLoop: '/incident-loop',
     incidentDetails: (id: string) => `/incidents/${id}`,

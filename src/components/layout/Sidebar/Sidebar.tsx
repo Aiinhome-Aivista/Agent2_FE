@@ -2,7 +2,6 @@ import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
   Inbox,
-  BookOpen,
   GitBranch,
   AlertOctagon,
   Activity,
@@ -10,6 +9,7 @@ import {
   Plug,
   X,
   RotateCcw,
+  Users
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/utils/cn";
@@ -26,6 +26,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { to: appConfig.routes.dashboard, label: "Dashboard", icon: LayoutDashboard },
+  { to: appConfig.routes.teamLeadDashboard, label: "Team Lead Dashboard", icon: Users, roles: ["admin"] },
   { to: "/connectors", label: "Connectors", icon: Plug, roles: ["admin"] },
   {
     to: appConfig.routes.incidents,
@@ -33,31 +34,20 @@ const navItems: NavItem[] = [
     icon: Inbox,
     badge: "live",
   },
-  // {
-  //   to: appConfig.routes.incidentLoop,
-  //   label: "Incident Loop",
-  //   icon: RotateCcw,
-  // },
-  { to: appConfig.routes.runbooks, label: "Runbooks", icon: GitBranch },
-  // {
-  //   to: appConfig.routes.knowledgeBase,
-  //   label: "Knowledge Base",
-  //   icon: BookOpen,
-  // },
-  // { to: "/knowledge-graph", label: "Knowledge Graph", icon: Network },
+  { to: appConfig.routes.runbooks, label: "Runbooks", icon: GitBranch, roles: ["admin"] },
    {
     to: appConfig.routes.incidentLoop,
     label: "Incident Timeline",
     icon: RotateCcw,
+    roles: ["admin"]
   },
   {
     to: appConfig.routes.escalations,
     label: "Escalations",
     icon: AlertOctagon,
-    roles: ["engineer", "admin"],
+    roles: ["admin"],
   },
-  { to: appConfig.routes.actions, label: "Activity Logs", icon: Activity },
-  // { to: appConfig.routes.settings, label: "Settings", icon: Settings },
+  { to: appConfig.routes.actions, label: "Activity Logs", icon: Activity, roles: ["admin"] },
 ];
 
 interface SidebarProps {

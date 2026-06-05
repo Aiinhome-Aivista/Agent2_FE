@@ -88,6 +88,25 @@ export const incidentApi = {
     );
     return data.data;
   },
+  async generateSolution(id: string) {
+    const { data } = await apiClient.post<ApiResponse<any>>(
+      `/incidents/${id}/generate-solution`
+    );
+    return data.data;
+  },
+  async getPendingAssignments() {
+    const { data } = await apiClient.get<ApiResponse<Incident[]>>(
+      '/incidents/pending-assignments'
+    );
+    return data.data;
+  },
+  async respondToAssignment(id: string, accept: boolean) {
+    const { data } = await apiClient.post<ApiResponse<{success: boolean}>>(
+      `/incidents/${id}/assignment`,
+      { accept }
+    );
+    return data.data;
+  },
 };
 
 /** Runbooks ================================================================= */
@@ -142,12 +161,7 @@ export const runbookApi = {
     files.forEach((file) => formData.append('files', file));
     const { data } = await apiClient.post<ApiResponse<Runbook>>(
       apiConfig.endpoints.runbooks.upload,
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      },
+      formData
     );
     return data.data;
   },
@@ -207,12 +221,7 @@ export const kbApi = {
     files.forEach((file) => formData.append('files', file));
     const { data } = await apiClient.post<ApiResponse<KBArticle>>(
       apiConfig.endpoints.knowledgeBase.upload,
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      },
+      formData
     );
     return data.data;
   },
@@ -267,6 +276,12 @@ export const dashboardApi = {
     const { data } = await apiClient.get<ApiResponse<TimeseriesPoint[]>>(
       apiConfig.endpoints.dashboard.timeseries,
       { params: { metric, range } },
+    );
+    return data.data;
+  },
+  async teamLeadDashboard() {
+    const { data } = await apiClient.get<ApiResponse<any>>(
+      '/dashboard/team-lead'
     );
     return data.data;
   },

@@ -119,7 +119,7 @@ export default function Login() {
             </Button>
           </form>
 
-          <div className="mt-6 rounded-md border border-border bg-muted/40 px-4 py-3 text-xs text-muted-foreground">
+          {/* <div className="mt-6 rounded-md border border-border bg-muted/40 px-4 py-3 text-xs text-muted-foreground">
             <p className="font-semibold text-foreground mb-1">Demo accounts</p>
             <p>
               <span className="font-mono">admin@example.com</span> / admin1234
@@ -130,7 +130,7 @@ export default function Login() {
             <p>
               <span className="font-mono">user@example.com</span> / user12345
             </p>
-          </div>
+          </div> */}
         </div>
 
         <p className="mt-4 text-center text-xs text-muted-foreground">

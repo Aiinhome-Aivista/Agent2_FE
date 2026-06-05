@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/Card';
-// import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/Button';
 import { PageSpinner } from '@/components/ui/Spinner';
 import { Badge } from '@/components/ui/Badge';
 import { StatusBadge, PriorityBadge } from '@/components/shared/StatusBadges';
@@ -52,31 +52,13 @@ export default function IncidentDetails() {
     refetchInterval: 8_000,
   });
 
-  const triageMutation = useMutation({
-    mutationFn: () => incidentApi.triage(id),
+  const generateSolutionMutation = useMutation({
+    mutationFn: () => incidentApi.generateSolution(id),
     onSuccess: () => {
-      success('Triage complete', 'Agent has classified and prioritised this incident.');
+      success('AI Solution Generated', 'A POC has been created and attached to the timeline.');
       qc.invalidateQueries({ queryKey: ['incidents', id] });
     },
-    onError: (e) => error('Triage failed', e instanceof Error ? e.message : ''),
-  });
-
-  const resolveMutation = useMutation({
-    mutationFn: () => incidentApi.resolve(id),
-    onSuccess: () => {
-      success('Incident resolved');
-      qc.invalidateQueries({ queryKey: ['incidents', id] });
-    },
-    onError: (e) => error('Resolve failed', e instanceof Error ? e.message : ''),
-  });
-
-  const escalateMutation = useMutation({
-    mutationFn: () => incidentApi.escalate(id, 'Manual escalation by operator'),
-    onSuccess: () => {
-      success('Escalated to engineering queue');
-      qc.invalidateQueries({ queryKey: ['incidents', id] });
-    },
-    onError: (e) => error('Escalation failed', e instanceof Error ? e.message : ''),
+    onError: (e) => error('Generation failed', e instanceof Error ? e.message : ''),
   });
 
   if (isLoading || !incident) {
@@ -134,10 +116,18 @@ export default function IncidentDetails() {
               · {formatDateTime(incident.createdAt)}
             </p>
           </div>
-          {/* <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2">
             {incident.status !== 'resolved' && incident.status !== 'closed' && (
               <>
                 <Button
+                  variant="outline"
+                  leftIcon={<Bot className="h-4 w-4" />}
+                  onClick={() => generateSolutionMutation.mutate()}
+                  isLoading={generateSolutionMutation.isPending}
+                >
+                  Generate AI Solution & POC
+                </Button>
+                {/* <Button
                   variant="outline"
                   leftIcon={<Bot className="h-4 w-4" />}
                   onClick={() => triageMutation.mutate()}
@@ -160,10 +150,10 @@ export default function IncidentDetails() {
                   isLoading={escalateMutation.isPending}
                 >
                   Escalate
-                </Button>
+                </Button> */}
               </>
             )}
-          </div> */}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

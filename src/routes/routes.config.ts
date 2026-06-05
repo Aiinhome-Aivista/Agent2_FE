@@ -25,6 +25,12 @@ export const routesConfig: RouteDefinition[] = [
     isPublic: false,
   },
   {
+    path: appConfig.routes.teamLeadDashboard,
+    Component: lazy(() => import('@/pages/TeamLeadDashboard')),
+    isPublic: false,
+    roles: ['admin', 'engineer'],
+  },
+  {
     path: appConfig.routes.incidents,
     Component: lazy(() => import('@/pages/IncidentQueue')),
     isPublic: false,

@@ -12,19 +12,19 @@ import { Table, THead, TBody, TR, TH, TD } from '@/components/ui/Table';
 import { PageSpinner } from '@/components/ui/Spinner';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { StatusBadge, PriorityBadge, SourceBadge } from '@/components/shared/StatusBadges';
-import { CreateIncidentModal } from './CreateIncidentModal';
 import { useDebounce } from '@/hooks/useDebounce';
 import { incidentApi } from '@/services/api/endpoints';
 import { formatDateTime, truncate } from '@/utils/formatters';
+import { useAuth } from '@/context/AuthContext';
 
 export default function IncidentQueue() {
+  const { user } = useAuth();
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('');
   const [priority, setPriority] = useState('');
   const [sortBy, setSortBy] = useState('createdAt');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [page, setPage] = useState(1);
-  const [createOpen, setCreateOpen] = useState(false);
   const [nextRefresh, setNextRefresh] = useState(15);
 
   useEffect(() => {
@@ -317,14 +317,6 @@ export default function IncidentQueue() {
         </Card>
       </div>
 
-      <CreateIncidentModal
-        open={createOpen}
-        onClose={() => setCreateOpen(false)}
-        onCreated={() => {
-          setCreateOpen(false);
-          refetch();
-        }}
-      />
     </PageWrapper>
   );
 }
