@@ -27,6 +27,7 @@ export function PriorityBadge({ priority }: { priority: Priority }) {
 
 const statusMap: Record<IncidentStatus, { label: string; variant: BadgeVariant }> = {
   new: { label: 'New', variant: 'info' },
+  accepted: { label: 'Accepted', variant: 'success' },
   analyzing: { label: 'Analyzing', variant: 'default' },
   remediating: { label: 'Remediating', variant: 'warning' },
   resolved: { label: 'Resolved', variant: 'success' },

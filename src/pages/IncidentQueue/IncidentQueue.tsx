@@ -123,6 +123,7 @@ export default function IncidentQueue() {
                   options={[
                     { label: 'All statuses', value: '' },
                     { label: 'New', value: 'new' },
+                    { label: 'Accepted', value: 'accepted' },
                     { label: 'Analyzing', value: 'analyzing' },
                     { label: 'Escalated', value: 'escalated' },
                     { label: 'Resolved', value: 'resolved' },

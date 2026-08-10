@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { AlertCircle, Users, Activity } from 'lucide-react';
 import { dashboardApi } from '@/services/api/endpoints';
+import { PageSpinner } from '@/components/ui/Spinner';
 
 interface Engineer {
   id: string;
@@ -36,9 +37,7 @@ export default function TeamLeadDashboard() {
   if (isLoading) {
     return (
       <PageWrapper>
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500" />
-        </div>
+        <PageSpinner />
       </PageWrapper>
     );
   }
@@ -57,7 +56,7 @@ export default function TeamLeadDashboard() {
       <PageWrapper>
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 py-6">
       <h1 className="text-2xl font-bold text-foreground mb-6">Team Lead Dashboard</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
         
         {/* Engineers Bandwidth Card */}
         <Card className="col-span-1">

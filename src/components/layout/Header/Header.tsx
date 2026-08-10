@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { LogOut, Settings, User as UserIcon, Menu, Bell, Check, X } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { LogOut, Settings, User as UserIcon, Menu, Bell, Check, X, XCircle, CheckCircle2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Avatar } from '@/components/ui/Avatar';
@@ -8,6 +9,7 @@ import { useAuth } from '@/context/AuthContext';
 import { appConfig } from '@/config/app.config';
 import { incidentApi } from '@/services/api/endpoints';
 import { Incident } from '@/types';
+import { useToast } from '@/hooks/useToast';
 // import { cn } from '@/utils/cn';
 
 interface HeaderProps {
@@ -58,10 +60,14 @@ export function Header({ onMenuClick }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [pendingAssignments, setPendingAssignments] = useState<Incident[]>([]);
+  const [adminNotifications, setAdminNotifications] = useState<any[]>([]);
+  const [clearedNotifIds, setClearedNotifIds] = useState<Set<number>>(new Set());
   const navigate = useNavigate();
   const menuRef = useRef<HTMLDivElement>(null);
   const notificationsRef = useRef<HTMLDivElement>(null);
-  const prevPendingLengthRef = useRef(0);
+  const notifiedTicketsRef = useRef<Set<string>>(new Set());
+  const [newTicketPopup, setNewTicketPopup] = useState<Incident | null>(null);
+  const [newAdminPopup, setNewAdminPopup] = useState<any | null>(null);
 
   useEffect(() => {
     let audioInterval: NodeJS.Timeout | null = null;
@@ -91,17 +97,20 @@ export function Header({ onMenuClick }: HeaderProps) {
     };
 
     if (pendingAssignments.length > 0) {
-      if (pendingAssignments.length > prevPendingLengthRef.current) {
+      const unnotifiedTicket = pendingAssignments.find(
+        (t) => !notifiedTicketsRef.current.has(t.id)
+      );
+
+      if (unnotifiedTicket) {
         playSound();
+        setNewTicketPopup(unnotifiedTicket);
+        setTimeout(() => setNewTicketPopup(null), 5000);
+
+        pendingAssignments.forEach((t) => notifiedTicketsRef.current.add(t.id));
       }
-      // Play sound every 3 seconds continuously
-      audioInterval = setInterval(playSound, 3000);
     }
 
-    prevPendingLengthRef.current = pendingAssignments.length;
-
     return () => {
-      if (audioInterval) clearInterval(audioInterval);
     };
   }, [pendingAssignments]);
 
@@ -114,9 +123,63 @@ export function Header({ onMenuClick }: HeaderProps) {
         console.error('Failed to fetch pending assignments', err);
       }
     };
-    if (user) {
+    if (user && user.role !== 'admin') {
       fetchPending();
       const interval = setInterval(fetchPending, 60000); // Check every minute
+      return () => clearInterval(interval);
+    }
+  }, [user]);
+
+  const { toast } = useToast();
+  const seenAdminNotifsRef = useRef<Set<number>>(new Set());
+
+  useEffect(() => {
+    let audioInterval: NodeJS.Timeout | null = null;
+    const playSound = () => {
+      try {
+        const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); 
+        oscillator.frequency.exponentialRampToValueAtTime(1320, audioCtx.currentTime + 0.1); 
+        gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + 0.05);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        oscillator.start(audioCtx.currentTime);
+        oscillator.stop(audioCtx.currentTime + 0.5);
+      } catch (e) {
+        console.error('Audio playback failed', e);
+      }
+    };
+
+    const fetchAdminNotifications = async () => {
+      if (user?.role !== 'admin') return;
+      try {
+        const data = await incidentApi.getAdminNotifications();
+        setAdminNotifications(data);
+        
+        const newNotifs = data.filter((n) => !seenAdminNotifsRef.current.has(n.id));
+        if (newNotifs.length > 0) {
+          newNotifs.forEach(n => seenAdminNotifsRef.current.add(n.id));
+          const latest = newNotifs[0];
+          setNewAdminPopup(latest);
+          playSound();
+          setTimeout(() => setNewAdminPopup(null), 5000);
+        }
+      } catch (err) {
+        console.error('Failed to fetch admin notifications', err);
+      }
+    };
+
+    if (user?.role === 'admin') {
+      incidentApi.getAdminNotifications().then((data) => {
+        setAdminNotifications(data);
+        data.forEach(n => seenAdminNotifsRef.current.add(n.id));
+      });
+      const interval = setInterval(fetchAdminNotifications, 5000);
       return () => clearInterval(interval);
     }
   }, [user]);
@@ -173,14 +236,14 @@ export function Header({ onMenuClick }: HeaderProps) {
             aria-label="Notifications"
           >
             <motion.div
-              animate={pendingAssignments.length > 0 ? { rotate: [0, -15, 15, -10, 10, 0], scale: [1, 1.3, 1, 1.3, 1] } : { rotate: 0, scale: 1 }}
-              transition={pendingAssignments.length > 0 ? { repeat: Infinity, duration: 1.5, repeatDelay: 1 } : {}}
+              animate={(user?.role === 'admin' ? adminNotifications.filter(n => !clearedNotifIds.has(n.id)) : pendingAssignments).length > 0 ? { rotate: [0, -15, 15, -10, 10, 0], scale: [1, 1.3, 1, 1.3, 1] } : { rotate: 0, scale: 1 }}
+              transition={(user?.role === 'admin' ? adminNotifications.filter(n => !clearedNotifIds.has(n.id)) : pendingAssignments).length > 0 ? { repeat: Infinity, duration: 1.5, repeatDelay: 1 } : {}}
             >
               <Bell className="h-5 w-5" />
             </motion.div>
-            {pendingAssignments.length > 0 && (
+            {(user?.role === 'admin' ? adminNotifications.filter(n => !clearedNotifIds.has(n.id)) : pendingAssignments).length > 0 && (
               <span className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-critical text-[9px] font-bold text-white ring-2 ring-surface">
-                {pendingAssignments.length}
+                {(user?.role === 'admin' ? adminNotifications.filter(n => !clearedNotifIds.has(n.id)) : pendingAssignments).length}
               </span>
             )}
           </button>
@@ -195,18 +258,51 @@ export function Header({ onMenuClick }: HeaderProps) {
                 className="absolute right-0 top-full mt-2 w-80 rounded-lg border border-border bg-surface shadow-soft-lg overflow-hidden z-40"
               >
                 <div className="px-4 py-3 border-b border-border flex justify-between items-center">
-                  <h3 className="text-sm font-semibold text-foreground">Pending Assignments</h3>
-                  <span className="text-xs text-muted-foreground">{pendingAssignments.length} new</span>
+                  <h3 className="text-sm font-semibold text-foreground">
+                    {user?.role === 'admin' ? 'Recent Assignments' : 'Pending Assignments'}
+                  </h3>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs text-muted-foreground">
+                      {(user?.role === 'admin' ? adminNotifications.filter(n => !clearedNotifIds.has(n.id)) : pendingAssignments).length} total
+                    </span>
+                    {user?.role === 'admin' && adminNotifications.filter(n => !clearedNotifIds.has(n.id)).length > 0 && (
+                      <button
+                        onClick={() => setClearedNotifIds(new Set([...clearedNotifIds, ...adminNotifications.map(n => n.id)]))}
+                        className="text-xs font-medium text-primary hover:underline"
+                      >
+                        Clear all
+                      </button>
+                    )}
+                  </div>
                 </div>
-                <div className="max-h-80 overflow-y-auto">
-                  {pendingAssignments.length === 0 ? (
-                    <div className="p-4 text-center text-sm text-muted-foreground">
-                      No pending assignments
-                    </div>
+                <div className="max-h-80 overflow-y-auto custom-scrollbar">
+                  {user?.role === 'admin' ? (
+                    adminNotifications.filter(n => !clearedNotifIds.has(n.id)).length === 0 ? (
+                      <div className="p-4 text-center text-sm text-muted-foreground">
+                        No recent assignments
+                      </div>
+                    ) : (
+                      adminNotifications.filter(n => !clearedNotifIds.has(n.id)).map((notif) => (
+                        <div key={notif.id} className="p-3 border-b border-border hover:bg-surface-hover transition-colors">
+                          <div className="flex items-center gap-2 mb-1">
+                            {notif.action.includes('Declined') ? <XCircle className="w-4 h-4 text-critical" /> : <CheckCircle2 className="w-4 h-4 text-success" />}
+                            <p className="text-xs font-semibold text-primary">Ticket #{notif.incident_id}</p>
+                          </div>
+                          <p className="text-sm font-medium text-foreground mb-1">{notif.message}</p>
+                          <p className="text-xs text-muted-foreground line-clamp-1">{notif.subject}</p>
+                        </div>
+                      ))
+                    )
                   ) : (
-                    pendingAssignments.map((incident) => (
-                      <PendingAssignmentItem key={incident.id} incident={incident} onRespond={handleAssignmentResponse} />
-                    ))
+                    pendingAssignments.length === 0 ? (
+                      <div className="p-4 text-center text-sm text-muted-foreground">
+                        No pending assignments
+                      </div>
+                    ) : (
+                      pendingAssignments.map((incident) => (
+                        <PendingAssignmentItem key={incident.id} incident={incident} onRespond={handleAssignmentResponse} />
+                      ))
+                    )
                   )}
                 </div>
               </motion.div>
@@ -278,6 +374,99 @@ export function Header({ onMenuClick }: HeaderProps) {
           </AnimatePresence>
         </div>
       </div>
+
+      {/* New Ticket Sliding Popup */}
+      {typeof document !== 'undefined' && createPortal(
+        <AnimatePresence>
+          {newTicketPopup && (
+            <motion.div
+              initial={{ opacity: 0, x: 100, y: 0 }}
+              animate={{ opacity: 1, x: 0, y: 0 }}
+              exit={{ opacity: 0, x: 100 }}
+              transition={{ duration: 0.3 }}
+              className="fixed bottom-24 right-6 z-[100] w-96 rounded-xl border-2 border-primary/20 bg-surface shadow-xl overflow-hidden p-5 flex gap-4 items-start"
+            >
+              <button
+                onClick={() => setNewTicketPopup(null)}
+                className="absolute top-2 right-2 text-muted-foreground hover:text-foreground rounded-md p-1 hover:bg-surface-hover transition-colors"
+                aria-label="Close"
+              >
+                <X className="w-4 h-4" />
+              </button>
+              <div className="rounded-full bg-primary/10 p-3 text-primary mt-0.5 shrink-0">
+                <Bell className="w-6 h-6 animate-pulse" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex justify-between items-center mb-1">
+                  <h3 className="text-base font-bold text-foreground truncate mr-2">New Assignment</h3>
+                  <span className="shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary uppercase tracking-wide">
+                    {newTicketPopup.priority || 'NEW'}
+                  </span>
+                </div>
+                <p className="text-sm font-semibold text-primary truncate">Ticket #{newTicketPopup.id}</p>
+                <p className="text-sm font-medium text-foreground mt-1.5 line-clamp-2">{newTicketPopup.subject}</p>
+                
+                {newTicketPopup.description && (
+                  <p className="text-xs text-muted-foreground mt-1.5 line-clamp-3 leading-relaxed">
+                    {newTicketPopup.description}
+                  </p>
+                )}
+
+                {(newTicketPopup.caller || newTicketPopup.source) && (
+                  <div className="flex items-center justify-between text-xs font-medium text-muted-foreground mt-3 pt-3 border-t border-border">
+                    {newTicketPopup.caller && <span>By: <span className="text-foreground">{newTicketPopup.caller}</span></span>}
+                    {newTicketPopup.source && <span className="uppercase">Via: {newTicketPopup.source}</span>}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
+
+      {/* Admin Notification Sliding Popup */}
+      {typeof document !== 'undefined' && createPortal(
+        <AnimatePresence>
+          {newAdminPopup && (
+            <motion.div
+              initial={{ opacity: 0, x: 100, y: 0 }}
+              animate={{ opacity: 1, x: 0, y: 0 }}
+              exit={{ opacity: 0, x: 100 }}
+              transition={{ duration: 0.3 }}
+              className={`fixed bottom-24 right-6 z-[100] w-96 rounded-xl border-2 bg-surface shadow-xl overflow-hidden p-5 flex gap-4 items-start ${
+                newAdminPopup.action.includes('Declined') ? 'border-critical/20' : 'border-success/20'
+              }`}
+            >
+              <button
+                onClick={() => setNewAdminPopup(null)}
+                className="absolute top-2 right-2 text-muted-foreground hover:text-foreground rounded-md p-1 hover:bg-surface-hover transition-colors"
+                aria-label="Close"
+              >
+                <X className="w-4 h-4" />
+              </button>
+              <div className={`rounded-full p-3 mt-0.5 shrink-0 ${
+                newAdminPopup.action.includes('Declined') ? 'bg-critical/10 text-critical' : 'bg-success/10 text-success'
+              }`}>
+                {newAdminPopup.action.includes('Declined') ? <XCircle className="w-6 h-6" /> : <CheckCircle2 className="w-6 h-6" />}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex justify-between items-center mb-1">
+                  <h3 className="text-base font-bold text-foreground truncate mr-2">
+                    {newAdminPopup.action.includes('Declined') ? 'Assignment Declined' : 'Assignment Accepted'}
+                  </h3>
+                </div>
+                <p className="text-sm font-semibold text-primary truncate">Ticket #{newAdminPopup.incident_id}</p>
+                <p className="text-sm font-medium text-foreground mt-1.5">{newAdminPopup.message}</p>
+                <p className="text-xs text-muted-foreground mt-1.5 line-clamp-2 leading-relaxed">
+                  {newAdminPopup.subject}
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </header>
   );
 }

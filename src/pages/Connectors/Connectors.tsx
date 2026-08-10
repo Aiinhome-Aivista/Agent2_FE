@@ -14,9 +14,11 @@ import {
   Cloud,
   CloudCog,
   Loader2,
-  Plus,
   Server,
   Trello,
+  Mail,
+  Plus,
+  Trash2,
 } from 'lucide-react';
 import { useState, type ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -43,6 +45,7 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   cloud: Cloud,
   briefcase: Briefcase,
   'cloud-cog': CloudCog,
+  mail: Mail,
 };
 
 const statusVariant: Record<ConnectorStatus, 'success' | 'warning' | 'critical' | 'muted'> = {
@@ -58,6 +61,19 @@ export function Connectors() {
   const toast = useToast();
   const qc = useQueryClient();
   const [creatingForProvider, setCreatingForProvider] = useState<ConnectorProvider | null>(null);
+  const [deletingConnector, setDeletingConnector] = useState<Connector | null>(null);
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => ConnectorsApi.remove(id),
+    onSuccess: () => {
+      toast.success('Connector deleted', 'The connector has been removed.');
+      setDeletingConnector(null);
+      qc.invalidateQueries({ queryKey: ['connectors'] });
+    },
+    onError: (err) => {
+      toast.error('Failed to delete connector', (err as Error).message);
+    }
+  });
 
   const providersQ = useQuery({
     queryKey: ['connector-providers'],
@@ -87,6 +103,7 @@ export function Connectors() {
             connectors={connectorsQ.data ?? []}
             providers={providersQ.data ?? []}
             onOpen={(c) => navigate(`/connectors/${c.id}`)}
+            onDelete={(c) => setDeletingConnector(c)}
           />
           <CatalogSection
             providers={providersQ.data ?? []}
@@ -110,6 +127,30 @@ export function Connectors() {
           }}
         />
       )}
+
+      {deletingConnector && (
+        <Modal
+          open
+          onClose={() => setDeletingConnector(null)}
+          title="Delete Connector"
+          footer={
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setDeletingConnector(null)}>Cancel</Button>
+              <Button 
+                variant="danger" 
+                onClick={() => deleteMutation.mutate(deletingConnector.id)}
+                disabled={deleteMutation.isPending}
+              >
+                {deleteMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Delete'}
+              </Button>
+            </div>
+          }
+        >
+          <p className="text-sm text-muted-foreground">
+            Are you sure you want to delete {deletingConnector.name}? This action cannot be undone.
+          </p>
+        </Modal>
+      )}
     </PageWrapper>
   );
 }
@@ -119,10 +160,12 @@ function ConfiguredSection({
   connectors,
   providers,
   onOpen,
+  onDelete,
 }: {
   connectors: Connector[];
   providers: ConnectorProvider[];
   onOpen: (c: Connector) => void;
+  onDelete: (c: Connector) => void;
 }) {
   const providerByKey = new Map(providers.map((p) => [p.provider, p]));
   if (connectors.length === 0) {
@@ -168,7 +211,21 @@ function ConfiguredSection({
                       </p>
                     </div>
                   </div>
-                  <Badge variant={statusVariant[c.status]}>{c.status}</Badge>
+                  <div className="flex items-center gap-2">
+                    <Badge variant={statusVariant[c.status]}>{c.status}</Badge>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 w-7 p-0 text-muted-foreground hover:text-critical hover:bg-critical/10"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete(c);
+                      }}
+                      title="Delete connector"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
                 <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                   {c.last_synced_at ? (
@@ -373,6 +430,9 @@ function hintFor(key: string): string {
     pipeline_id: 'Numeric pipeline id from HubSpot',
     region: 'us | eu | in | au | cn | jp',
     module: 'desk | crm',
+    email: 'e.g. support@acme.com',
+    app_password: '16-digit App Password',
+    imap_server: 'e.g. imap.gmail.com',
   };
   return hints[key] ?? '';
 }

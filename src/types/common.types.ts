@@ -26,6 +26,7 @@ export interface AuthState {
 // ===== Incidents =====
 export type IncidentStatus =
   | 'new'
+  | 'accepted'
   | 'analyzing'
   | 'remediating'
   | 'resolved'
@@ -34,7 +35,7 @@ export type IncidentStatus =
 
 export type Priority = 'P1' | 'P2' | 'P3' | 'P4';
 export type Severity = 'critical' | 'high' | 'medium' | 'low';
-export type Source = 'itsm' | 'monitoring' | 'user_chat' | 'email' | 'webhook';
+export type Source = 'itsm' | 'monitoring' | 'user_chat' | 'email' | 'webhook' | 'jira' | 'servicenow' | 'salesforce' | 'zoho' | 'adf' | 'hubspot' | 'gmail';
 
 export interface AgentStep {
   id: string;

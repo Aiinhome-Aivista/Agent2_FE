@@ -9,8 +9,8 @@ class StorageService {
   private get isAvailable(): boolean {
     try {
       const k = '__iia_test__';
-      window.localStorage.setItem(k, k);
-      window.localStorage.removeItem(k);
+      window.sessionStorage.setItem(k, k);
+      window.sessionStorage.removeItem(k);
       return true;
     } catch {
       return false;
@@ -20,7 +20,7 @@ class StorageService {
   get<T>(key: string): T | null {
     try {
       const raw = this.isAvailable
-        ? window.localStorage.getItem(key)
+        ? window.sessionStorage.getItem(key)
         : (this.memory.get(key) ?? null);
       return raw ? (JSON.parse(raw) as T) : null;
     } catch {
@@ -30,17 +30,17 @@ class StorageService {
 
   set<T>(key: string, value: T): void {
     const raw = JSON.stringify(value);
-    if (this.isAvailable) window.localStorage.setItem(key, raw);
+    if (this.isAvailable) window.sessionStorage.setItem(key, raw);
     else this.memory.set(key, raw);
   }
 
   remove(key: string): void {
-    if (this.isAvailable) window.localStorage.removeItem(key);
+    if (this.isAvailable) window.sessionStorage.removeItem(key);
     else this.memory.delete(key);
   }
 
   clear(): void {
-    if (this.isAvailable) window.localStorage.clear();
+    if (this.isAvailable) window.sessionStorage.clear();
     else this.memory.clear();
   }
 }

@@ -101,10 +101,14 @@ export const incidentApi = {
     return data.data;
   },
   async respondToAssignment(id: string, accept: boolean) {
-    const { data } = await apiClient.post<ApiResponse<{success: boolean}>>(
+    const { data } = await apiClient.post<ApiResponse<any>>(
       `/incidents/${id}/assignment`,
       { accept }
     );
+    return data.data;
+  },
+  async getAdminNotifications(since: number = 0) {
+    const { data } = await apiClient.get<ApiResponse<any[]>>(`/incidents/admin-notifications?since=${since}`);
     return data.data;
   },
 };
@@ -295,5 +299,21 @@ export const auditApi = {
       { params: { limit } },
     );
     return data.data;
+  },
+};
+
+/** Assignments ============================================================= */
+export const assignmentApi = {
+  async journey(page = 1, pageSize = 20, engineerId?: string) {
+    const params: Record<string, any> = { page, page_size: pageSize };
+    if (engineerId) {
+      params.engineer_id = engineerId;
+    }
+    const { data } = await apiClient.get<any>(
+      '/assignments/journey',
+      { params },
+    );
+    // Return data directly since we aren't using the ApiResponse wrapper in the backend for this endpoint
+    return data;
   },
 };
