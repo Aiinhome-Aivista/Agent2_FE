@@ -111,7 +111,15 @@ export default function AutomatedActions() {
                     </span>
                     <span className="text-sm font-medium text-foreground">{incident.subject}</span>
                   </div>
-                  <Badge variant={incident.status === 'escalated' ? 'critical' : incident.assignment_status === 'assigned' ? 'success' : 'warning'}>
+                  <Badge variant={
+                    incident.assignment_status === 'pending_approval' 
+                      ? 'warning' 
+                      : incident.assignment_status === 'assigned' 
+                        ? 'success' 
+                        : incident.status === 'escalated' || incident.assignment_status === 'escalated_to_lead'
+                          ? 'critical'
+                          : 'neutral'
+                  }>
                     {incident.assignment_status}
                   </Badge>
                 </div>

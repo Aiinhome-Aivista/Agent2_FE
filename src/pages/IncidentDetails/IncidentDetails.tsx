@@ -92,10 +92,10 @@ export default function IncidentDetails() {
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-6">
           <div className="min-w-0">
-            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+            <div className="flex flex-wrap items-center gap-3">
               <span className="text-xs font-mono text-muted-foreground">{incident.id}</span>
+              <StatusBadge status={incident.status} assignmentStatus={incident.assignmentStatus} assignment_status={incident.assignment_status} assignedTo={incident.assignedTo} />
               <PriorityBadge priority={incident.priority} />
-              <StatusBadge status={incident.status} />
               {incident.autoResolved && (
                 <Badge variant="success" dot>
                   Auto-resolved

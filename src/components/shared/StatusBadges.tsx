@@ -33,16 +33,59 @@ const statusMap: Record<IncidentStatus, { label: string; variant: BadgeVariant }
   resolved: { label: 'Resolved', variant: 'success' },
   escalated: { label: 'Escalated', variant: 'critical' },
   closed: { label: 'Closed', variant: 'muted' },
+  assigned: { label: 'Assigned', variant: 'warning' },
+  rejected: { label: 'Rejected', variant: 'critical' },
 };
 
-export function StatusBadge({ status }: { status: IncidentStatus }) {
-  const config = statusMap[status];
+export function StatusBadge({ status, assignmentStatus, assignment_status, assignedTo }: { status: IncidentStatus, assignmentStatus?: string, assignment_status?: string, assignedTo?: string }) {
+  const finalAssignmentStatus = assignmentStatus || assignment_status;
+  
+  // If the incident has progressed past 'new', always show its actual lifecycle status
+  // (e.g. analyzing, remediating, resolved, closed) instead of its assignment metadata.
+  if (status !== 'new') {
+    const config = statusMap[status] || { label: status, variant: 'default' };
+    return (
+      <Badge variant={config.variant} dot>
+        {config.label}
+      </Badge>
+    );
+  }
+
+  // If the incident is 'new', we use the assignment status to show progress before it officially starts.
+  if (finalAssignmentStatus === 'pending_approval') {
+    return (
+      <Badge variant="warning" dot>
+        Assigned
+      </Badge>
+    );
+  }
+  
+  if (finalAssignmentStatus === 'assigned') {
+    return (
+      <Badge variant="success" dot>
+        Accepted
+      </Badge>
+    );
+  }
+
+  if (finalAssignmentStatus === 'escalated_to_lead') {
+    return (
+      <Badge variant="critical" dot>
+        Rejected
+      </Badge>
+    );
+  }
+
+  // Fallback for 'new' and unassigned
+  const config = statusMap[status] || { label: status, variant: 'default' };
   return (
     <Badge variant={config.variant} dot>
       {config.label}
     </Badge>
   );
 }
+
+
 
 const sourceMap: Record<Source, { label: string; icon: any }> = {
   itsm: { label: 'ITSM', icon: Database },

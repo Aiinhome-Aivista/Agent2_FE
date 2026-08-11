@@ -31,7 +31,9 @@ export type IncidentStatus =
   | 'remediating'
   | 'resolved'
   | 'escalated'
-  | 'closed';
+  | 'closed'
+  | 'assigned'
+  | 'rejected';
 
 export type Priority = 'P1' | 'P2' | 'P3' | 'P4';
 export type Severity = 'critical' | 'high' | 'medium' | 'low';
@@ -73,6 +75,9 @@ export interface Incident {
   category: string;
   subcategory?: string;
   assignedTo?: string;
+  assignedToName?: string;
+  assignmentStatus?: string;
+  assignment_status?: string;
   slaDeadline?: string;
   slaBreached: boolean;
   autoResolved: boolean;
