@@ -190,6 +190,7 @@ export default function IncidentDetails() {
                     {incident.steps.map((step, idx) => {
                       const Icon = stepIcons[step.type];
                       const colorClass = stepColors[step.type];
+                      const referencedIds = (step.metadata as any)?.referenced_ticket_ids as string[] | undefined;
                       return (
                         <motion.li
                           key={step.id}
@@ -221,6 +222,28 @@ export default function IncidentDetails() {
                             <p className="mt-1 text-sm text-foreground bg-muted/40 rounded-md px-3 py-2 border border-border">
                               {step.output}
                             </p>
+                            {referencedIds && referencedIds.length > 0 && (
+                              <div className="mt-2 text-xs text-muted-foreground flex items-center gap-1">
+                                <span>References:</span>
+                                <Badge variant="outline" className="font-mono bg-background">
+                                  {referencedIds[0]}
+                                </Badge>
+                                {referencedIds.length > 1 && (
+                                  <div className="relative group cursor-pointer">
+                                    <Badge variant="muted" className="hover:bg-muted/80">
+                                      +{referencedIds.length - 1} more
+                                    </Badge>
+                                    <div className="absolute left-0 bottom-full mb-1 hidden group-hover:block z-[99] bg-surface border border-border rounded-md shadow-md p-2 w-max max-h-48 overflow-y-auto text-foreground">
+                                      <ul className="space-y-1">
+                                        {referencedIds.slice(1).map((id, i) => (
+                                          <li key={i} className="font-mono text-xs">{id}</li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            )}
                           </div>
                         </motion.li>
                       );
