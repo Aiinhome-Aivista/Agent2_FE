@@ -15,10 +15,9 @@ import { StatusBadge, PriorityBadge, SourceBadge } from '@/components/shared/Sta
 import { useDebounce } from '@/hooks/useDebounce';
 import { incidentApi } from '@/services/api/endpoints';
 import { formatDateTime, truncate } from '@/utils/formatters';
-import { useAuth } from '@/context/AuthContext';
+
 
 export default function IncidentQueue() {
-  const { user } = useAuth();
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState('');
   const [priority, setPriority] = useState('');
@@ -36,7 +35,7 @@ export default function IncidentQueue() {
 
   const debouncedSearch = useDebounce(search, 300);
 
-  const { data, isLoading, refetch } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['incidents', { debouncedSearch, status, priority, page }],
     queryFn: () =>
       incidentApi.list({
@@ -268,7 +267,7 @@ export default function IncidentQueue() {
                             <PriorityBadge priority={inc.priority} />
                           </TD>
                           <TD className="px-4 py-4">
-                            <StatusBadge status={inc.status} assignmentStatus={inc.assignmentStatus} assignment_status={inc.assignment_status} assignedTo={inc.assignedTo} />
+                            <StatusBadge status={inc.status} assignmentStatus={inc.assignmentStatus} assignment_status={inc.assignment_status} />
                           </TD>
                           <TD className="px-4 py-4">
                             <SourceBadge source={inc.source} />

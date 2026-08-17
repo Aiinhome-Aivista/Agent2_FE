@@ -94,7 +94,7 @@ export default function IncidentDetails() {
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-3">
               <span className="text-xs font-mono text-muted-foreground">{incident.id}</span>
-              <StatusBadge status={incident.status} assignmentStatus={incident.assignmentStatus} assignment_status={incident.assignment_status} assignedTo={incident.assignedTo} />
+              <StatusBadge status={incident.status} assignmentStatus={incident.assignmentStatus} assignment_status={incident.assignment_status} />
               <PriorityBadge priority={incident.priority} />
               {incident.autoResolved && (
                 <Badge variant="success" dot>

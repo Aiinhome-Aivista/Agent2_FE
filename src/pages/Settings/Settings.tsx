@@ -1,8 +1,7 @@
-import { Save, Bot, Bell, Plug, Shield } from 'lucide-react';
+import { Save, Shield } from 'lucide-react';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
-import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { useAuth } from '@/context/AuthContext';
@@ -157,19 +156,3 @@ export default function Settings() {
   );
 }
 
-function Integration({ name, connected = false }: { name: string; connected?: boolean }) {
-  return (
-    <div className="flex items-center justify-between rounded-md border border-border px-3 py-2">
-      <span className="text-sm font-medium">{name}</span>
-      {connected ? (
-        <Badge variant="success" dot>
-          Connected
-        </Badge>
-      ) : (
-        <Button size="xs" variant="outline">
-          Connect
-        </Button>
-      )}
-    </div>
-  );
-}

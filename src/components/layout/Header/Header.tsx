@@ -9,7 +9,7 @@ import { useAuth } from '@/context/AuthContext';
 import { appConfig } from '@/config/app.config';
 import { incidentApi } from '@/services/api/endpoints';
 import { Incident } from '@/types';
-import { useToast } from '@/hooks/useToast';
+
 // import { cn } from '@/utils/cn';
 
 interface HeaderProps {
@@ -70,8 +70,6 @@ export function Header({ onMenuClick }: HeaderProps) {
   const [newAdminPopup, setNewAdminPopup] = useState<any | null>(null);
 
   useEffect(() => {
-    let audioInterval: NodeJS.Timeout | null = null;
-
     const playSound = () => {
       try {
         const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -130,11 +128,9 @@ export function Header({ onMenuClick }: HeaderProps) {
     }
   }, [user]);
 
-  const { toast } = useToast();
   const seenAdminNotifsRef = useRef<Set<number>>(new Set());
 
   useEffect(() => {
-    let audioInterval: NodeJS.Timeout | null = null;
     const playSound = () => {
       try {
         const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();

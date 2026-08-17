@@ -7,7 +7,7 @@ import { PageSpinner } from '@/components/ui/Spinner';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { assignmentApi } from '@/services/api/endpoints';
 import { formatRelativeTime } from '@/utils/formatters';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/Badge';
 import { Avatar } from '@/components/ui/Avatar';
 
@@ -118,7 +118,7 @@ export default function AutomatedActions() {
                         ? 'success' 
                         : incident.status === 'escalated' || incident.assignment_status === 'escalated_to_lead'
                           ? 'critical'
-                          : 'neutral'
+                          : 'default'
                   }>
                     {incident.assignment_status}
                   </Badge>
@@ -134,8 +134,7 @@ export default function AutomatedActions() {
                       status="neutral" 
                     />
 
-                    {incident.journey.map((step: any, index: number) => {
-                      const isLast = index === incident.journey.length - 1;
+                    {incident.journey.map((step: any) => {
                       
                       if (step.action === "Assignment Proposed") {
                         const engId = step.metadata?.proposed_to;
