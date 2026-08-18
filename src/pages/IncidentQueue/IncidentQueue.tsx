@@ -227,7 +227,7 @@ export default function IncidentQueue() {
                             )}
                           </div>
                         </TH>
-                        <TH className="px-4 py-3">Subject</TH>
+                        <TH className="px-4 py-3 min-w-[250px]">Subject</TH>
                         <TH
                           className="cursor-pointer hover:text-foreground transition-colors group px-4 py-3"
                           onClick={() => toggleSort('priority')}
