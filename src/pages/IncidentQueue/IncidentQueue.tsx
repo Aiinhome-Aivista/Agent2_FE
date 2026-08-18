@@ -63,8 +63,8 @@ export default function IncidentQueue() {
       }
 
       if (sortBy === 'createdAt') {
-        v1 = new Date(v1).getTime();
-        v2 = new Date(v2).getTime();
+        v1 = new Date((a as any).createdAt || (a as any).created_at || 0).getTime();
+        v2 = new Date((b as any).createdAt || (b as any).created_at || 0).getTime();
       }
 
       if (v1 < v2) return sortOrder === 'asc' ? -1 : 1;
