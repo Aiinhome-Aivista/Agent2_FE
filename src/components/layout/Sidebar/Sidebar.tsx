@@ -75,10 +75,10 @@ function NavList({ onItemClick }: { onItemClick?: () => void }) {
           className={({ isActive }) =>
             cn(
               "group flex items-center justify-between gap-3 rounded-md px-3 py-2 text-sm font-medium transition-all",
-              "hover:bg-surface-hover",
+              "hover:bg-primary/20",
               isActive
                 ? "bg-primary/10 text-primary shadow-sm"
-                : "text-slate-300 hover:text-white",
+                : "text-slate-300 hover:text-primary",
             )
           }
         >
@@ -90,7 +90,7 @@ function NavList({ onItemClick }: { onItemClick?: () => void }) {
                     "h-4 w-4 transition-colors shrink-0",
                     isActive
                       ? "text-primary"
-                      : "text-slate-400 group-hover:text-white",
+                      : "text-slate-400 group-hover:text-primary",
                   )}
                 />
                 <span>{label}</span>
