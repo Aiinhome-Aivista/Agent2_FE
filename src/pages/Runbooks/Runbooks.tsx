@@ -18,7 +18,7 @@ import { Badge } from '@/components/ui/Badge';
 import { PageSpinner, Spinner } from '@/components/ui/Spinner';
 import { CreateContentModal } from '@/components/shared/CreateContentModal';
 import { Sheet } from '@/components/ui/Sheet';
-import { FileText, Download, Archive, Edit3 } from 'lucide-react';
+import { FileText, Download, Archive } from 'lucide-react';
 import { runbookApi } from '@/services/api/endpoints';
 import { formatDuration, formatRelativeTime } from '@/utils/formatters';
 import { cn } from '@/utils/cn';
@@ -37,7 +37,7 @@ export default function Runbooks() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'Runbook' | 'Article'>('Runbook');
   const [selectedRunbook, setSelectedRunbook] = useState<Runbook | null>(null);
-  const [activeDetailTab, setActiveDetailTab] = useState<DetailTab>('steps');
+  const [, setActiveDetailTab] = useState<DetailTab>('steps');
   const [processedRunbook, setProcessedRunbook] = useState<Runbook | null>(null);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -568,7 +568,7 @@ function StepsTab({ runbook }: { runbook: Runbook }) {
   );
 }
 
-function HistoryTab({ runbookId }: { runbookId: string | number }) {
+export function HistoryTab({ runbookId }: { runbookId: string | number }) {
   const { data, isLoading } = useQuery({
     queryKey: ['runbook-executions', runbookId],
     queryFn: () => runbookApi.executions(runbookId, 20),

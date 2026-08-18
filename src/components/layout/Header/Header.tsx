@@ -9,7 +9,7 @@ import { useAuth } from '@/context/AuthContext';
 import { appConfig } from '@/config/app.config';
 import { incidentApi } from '@/services/api/endpoints';
 import { Incident } from '@/types';
-import { useToast } from '@/hooks/useToast';
+
 // import { cn } from '@/utils/cn';
 
 interface HeaderProps {
@@ -77,7 +77,7 @@ export function Header({ onMenuClick }: HeaderProps) {
   const [newAdminPopup, setNewAdminPopup] = useState<any | null>(null);
 
   useEffect(() => {
-    let audioInterval: NodeJS.Timeout | null = null;
+
 
     const playSound = () => {
       try {
@@ -126,8 +126,8 @@ export function Header({ onMenuClick }: HeaderProps) {
       try {
         const data = await incidentApi.getPendingAssignments();
         const sortedData = data.sort((a, b) => {
-          const dateA = new Date(a.created_at || a.createdAt || 0).getTime();
-          const dateB = new Date(b.created_at || b.createdAt || 0).getTime();
+          const dateA = new Date((a as any).created_at || a.createdAt || 0).getTime();
+          const dateB = new Date((b as any).created_at || b.createdAt || 0).getTime();
           return dateB - dateA;
         });
         setPendingAssignments(sortedData);
@@ -142,11 +142,11 @@ export function Header({ onMenuClick }: HeaderProps) {
     }
   }, [user]);
 
-  const { toast } = useToast();
+
   const seenAdminNotifsRef = useRef<Set<number>>(new Set());
 
   useEffect(() => {
-    let audioInterval: NodeJS.Timeout | null = null;
+
     const playSound = () => {
       try {
         const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();

@@ -37,7 +37,7 @@ const statusMap: Record<IncidentStatus, { label: string; variant: BadgeVariant }
   rejected: { label: 'Rejected', variant: 'critical' },
 };
 
-export function StatusBadge({ status, assignmentStatus, assignment_status, assignedTo }: { status: IncidentStatus, assignmentStatus?: string, assignment_status?: string, assignedTo?: string }) {
+export function StatusBadge({ status, assignmentStatus, assignment_status }: { status: IncidentStatus, assignmentStatus?: string, assignment_status?: string, assignedTo?: string }) {
   const finalAssignmentStatus = assignmentStatus || assignment_status;
   
   // If the incident has progressed past 'new', always show its actual lifecycle status
@@ -87,7 +87,7 @@ export function StatusBadge({ status, assignmentStatus, assignment_status, assig
 
 
 
-const sourceMap: Record<Source, { label: string; icon: any }> = {
+const sourceMap: Partial<Record<Source, { label: string; icon: any }>> = {
   itsm: { label: 'ITSM', icon: Database },
   webhook: { label: 'Webhook', icon: Webhook },
   email: { label: 'Email', icon: Mail },

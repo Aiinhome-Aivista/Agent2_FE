@@ -78,7 +78,7 @@ export default function TeamLeadDashboard() {
                       <div className="font-medium text-gray-900 dark:text-gray-100 flex items-center gap-2">
                         {engineer.full_name}
                         {engineer.job_title && (
-                          <Badge variant="secondary" className="text-[10px] font-normal px-1.5 py-0">
+                          <Badge variant="outline" className="text-[10px] font-normal px-1.5 py-0">
                             {engineer.job_title}
                           </Badge>
                         )}
