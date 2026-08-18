@@ -3,23 +3,10 @@
  * Pure functions — safe to use anywhere, fully tree-shakeable.
  */
 
-function parseDate(input: string | Date | undefined | null): Date | null {
-  if (!input) return null;
-  let parsedInput = input;
-  if (typeof input === 'string' && input.includes('T') && !input.endsWith('Z')) {
-    const timePart = input.split('T')[1];
-    if (timePart && !timePart.includes('+') && !timePart.includes('-')) {
-      parsedInput = input + 'Z';
-    }
-  }
-  const date = typeof parsedInput === 'string' ? new Date(parsedInput) : parsedInput;
-  if (isNaN(date.getTime())) return null;
-  return date;
-}
-
 export function formatRelativeTime(input: string | Date | undefined | null): string {
-  const date = parseDate(input);
-  if (!date) return '—';
+  if (!input) return '—';
+  const date = typeof input === 'string' ? new Date(input) : input;
+  if (isNaN(date.getTime())) return '—';
   const diffMs = Date.now() - date.getTime();
   const diffSec = Math.round(diffMs / 1000);
 
@@ -36,8 +23,9 @@ export function formatRelativeTime(input: string | Date | undefined | null): str
 }
 
 export function formatDateTime(input: string | Date | undefined | null): string {
-  const date = parseDate(input);
-  if (!date) return '—';
+  if (!input) return '—';
+  const date = typeof input === 'string' ? new Date(input) : input;
+  if (isNaN(date.getTime())) return '—';
   return date.toLocaleString(undefined, {
     year: 'numeric',
     month: 'short',
