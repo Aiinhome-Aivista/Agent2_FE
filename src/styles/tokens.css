@@ -1,79 +1,185 @@
 /**
  * tokens.css — Design system tokens
  * ---------------------------------------------------------------
- * Every color, radius, spacing or shadow used in the app is
- * declared here as a CSS custom property. Tailwind reads these
- * via tailwind.config.ts so utilities like `bg-primary` resolve
- * to the right value for the active theme.
- *
- * Theme switching is driven by `[data-theme="dark"]` on <html>.
+ * Custom Global Orange Theme
  */
 
 :root,
 [data-theme='light'] {
-  /* === Surfaces ============================================== */
-  --color-background: 248 250 252;       /* slate-50  */
-  --color-foreground: 15 23 42;          /* slate-900 */
-  --color-surface: 255 255 255;          /* white     */
-  --color-surface-hover: 241 245 249;    /* slate-100 */
-  --color-muted: 241 245 249;            /* slate-100 */
-  --color-muted-foreground: 100 116 139; /* slate-500 */
-  --color-border: 226 232 240;           /* slate-200 */
-  --color-ring: 59 130 246;              /* blue-500  */
+  /* ==========================================
+     Centralized Brand Color Palette
+     ========================================== */
+  --primary-orange: #FF5A14;
+  --button-orange: #FF7A45;
+  --hover-orange: #F56B2F;
+  --sidebar-bg: #4A4A4A;
+  --light-bg: #FFFFFF;
+  --input-bg: #ffedf2;
+  --light-border: #D8D8D8;
+  --orange-border: #FF8A55;
+  --primary-text: #666666;
+  --secondary-text: #999999;
+  --placeholder-color: #B0B0B0;
+  --white: #FFFFFF;
 
-  /* === Brand ================================================= */
-  --color-primary: 37 99 235;            /* blue-600  */
-  --color-primary-foreground: 255 255 255;
-  --color-secondary: 99 102 241;         /* indigo-500 */
-  --color-secondary-foreground: 255 255 255;
-  --color-accent: 139 92 246;            /* violet-500 */
-  --color-accent-foreground: 255 255 255;
+  /* RGB Values for Opacity & Glassmorphism Effects (space-separated for Tailwind v3) */
+  --primary-orange-rgb: 255 90 20;
+  --button-orange-rgb: 255 122 69;
+  --hover-orange-rgb: 245 107 47;
+  --sidebar-bg-rgb: 74 74 74;
+  --input-bg-rgb: 255 237 242; /* ffedf2 */
+  --primary-text-rgb: 102 102 102;
+  --secondary-text-rgb: 153 153 153;
+  --light-border-rgb: 216 216 216;
+  --white-rgb: 255 255 255;
+  --dark-bg-rgb: 30 30 30;
+  --dark-text-rgb: 224 224 224;
+
+  /* ==========================================
+     Semantic Theme Variables (Mapped to Palette)
+     ========================================== */
+  --background: var(--input-bg);
+  --foreground: var(--primary-text);
+  --card: var(--white);
+  --card-foreground: var(--primary-text);
+  --popover: var(--white);
+  --popover-foreground: var(--primary-text);
+  --primary: var(--primary-orange);
+  --primary-hover: var(--hover-orange);
+  --primary-foreground: var(--white);
+  --secondary: var(--button-orange);
+  --secondary-badge: var(--secondary-text);
+  --secondary-foreground: var(--white);
+  --muted: var(--input-bg);
+  --muted-foreground: var(--secondary-text);
+  --border: var(--light-border);
+  --border-orange: var(--orange-border);
+  --input: var(--input-bg);
+  --ring: var(--primary-orange);
+  --sidebar: var(--sidebar-bg);
+  --placeholder: var(--placeholder-color);
+
+  /* Tailwind CSS v3 Base Colors */
+  --color-background: var(--input-bg-rgb);
+  --color-foreground: var(--primary-text-rgb);
+  --color-surface: var(--white-rgb);
+  --color-surface-hover: 255 240 245; 
+  --color-muted: var(--input-bg-rgb);
+  --color-muted-foreground: var(--secondary-text-rgb);
+  --color-border: var(--light-border-rgb);
+  --color-ring: var(--primary-orange-rgb);
+
+  --color-primary: var(--primary-orange-rgb);
+  --color-primary-foreground: var(--white-rgb);
+  --color-secondary: var(--sidebar-bg-rgb);
+  --color-secondary-foreground: var(--white-rgb);
+  --color-accent: var(--hover-orange-rgb);
+  --color-accent-foreground: var(--white-rgb);
 
   /* === Severity ============================================== */
-  --color-critical: 220 38 38;           /* red-600    */
-  --color-high: 234 88 12;               /* orange-600 */
-  --color-warning: 217 119 6;            /* amber-600  */
-  --color-success: 22 163 74;            /* green-600  */
-  --color-info: 14 165 233;              /* sky-500    */
+  --color-critical: 220 38 38;
+  --color-high: 234 88 12;
+  --color-warning: 217 119 6;
+  --color-success: 22 163 74;
+  --color-info: 14 165 233;
 
-  /* === Geometry ============================================== */
+  /* ==========================================
+     Centralized Typography Tokens
+     ========================================== */
+  --font-family-heading: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-family-body: Helvetica, Arial, sans-serif;
+  --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-heading: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', Menlo, monospace;
+
+  /* 1. Logo / Title ("DeepDcode") */
+  --typo-logo-title-font: var(--font-family-heading);
+  --typo-logo-title-size: 22px;
+  --typo-logo-title-weight: 700;
+
+  /* 2. Header Subtitle ("Know the system...") */
+  --typo-header-subtitle-font: var(--font-family-heading);
+  --typo-header-subtitle-size: 13px;
+  --typo-header-subtitle-weight: 400;
+
+  /* 3. Dropdown Label & Select Text ("Application type", "Please select") */
+  --typo-dropdown-font: var(--font-family-body);
+  --typo-dropdown-size: 14px;
+  --typo-dropdown-weight: 400;
+
+  /* 4. "GET INSIGHT" Button */
+  --typo-btn-get-insight-font: var(--font-family-body);
+  --typo-btn-get-insight-size: 14px;
+  --typo-btn-get-insight-weight: 700;
+
+  /* 5. Main Heading ("Get insight from the project repository!") */
+  --typo-main-heading-font: var(--font-family-heading);
+  --typo-main-heading-size: 22px;
+  --typo-main-heading-weight: 400;
+
+  /* 6. Middle Instruction Text ("Please select a application type...") */
+  --typo-instruction-font: var(--font-family-body);
+  --typo-instruction-size: 17px;
+  --typo-instruction-weight: 400;
+
+  /* 7. Example Question Pills ("What is PMO Portal?") */
+  --typo-question-pill-font: var(--font-family-body);
+  --typo-question-pill-size: 13px;
+  --typo-question-pill-weight: 400;
+
+  /* 8. Chat Input Box Text ("Type your question here...") */
+  --typo-chat-input-font: var(--font-family-body);
+  --typo-chat-input-size: 15px;
+  --typo-chat-input-weight: 400;
+
+  /* 9. Footer Text ("Powered by PwC...") */
+  --typo-footer-font: var(--font-family-body);
+  --typo-footer-size: 11px;
+  --typo-footer-weight: 400;
+
+  /* Geometry & Shadows */
+  --radius: 0.75rem;
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
 
-  --shadow-sm: 0 1px 2px 0 rgb(15 23 42 / 0.05);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 12px -2px rgb(15 23 42 / 0.08);
-  --shadow-lg: 0 12px 28px -8px rgb(15 23 42 / 0.12);
 }
 
 [data-theme='dark'] {
-  /* === Surfaces ============================================== */
-  --color-background: 8 13 26;           /* deep navy */
-  --color-foreground: 226 232 240;       /* slate-200 */
-  --color-surface: 17 24 39;             /* gray-900  */
-  --color-surface-hover: 30 41 59;       /* slate-800 */
-  --color-muted: 30 41 59;               /* slate-800 */
-  --color-muted-foreground: 148 163 184; /* slate-400 */
-  --color-border: 51 65 85;              /* slate-700 */
-  --color-ring: 96 165 250;              /* blue-400  */
+  /* Dark Theme Variable Overrides */
+  --background: #1e1e1e;
+  --foreground: #e0e0e0;
+  --secondary-text: #e0e0e0;
+  --card: #2a2a2a;
+  --card-foreground: #ffffff;
+  --popover: #2a2a2a;
+  --popover-foreground: #ffffff;
+  --primary: var(--primary-orange);
+  --primary-hover: var(--hover-orange);
+  --primary-foreground: var(--white);
+  --secondary: var(--sidebar-bg);
+  --secondary-badge: #7e7e7e80;
+  --secondary-foreground: var(--white);
+  --muted: #333333;
+  --muted-foreground: var(--secondary-text);
+  --border: #444444;
+  --border-orange: var(--orange-border);
+  --input: #2a2a2a;
+  --ring: var(--primary-orange);
+  --sidebar: #2b2b2b;
 
-  /* === Brand ================================================= */
-  --color-primary: 59 130 246;           /* blue-500  */
-  --color-primary-foreground: 248 250 252;
-  --color-secondary: 129 140 248;        /* indigo-400 */
-  --color-secondary-foreground: 248 250 252;
-  --color-accent: 167 139 250;           /* violet-400 */
-  --color-accent-foreground: 248 250 252;
-
-  /* === Severity ============================================== */
-  --color-critical: 248 113 113;         /* red-400    */
-  --color-high: 251 146 60;              /* orange-400 */
-  --color-warning: 251 191 36;           /* amber-400  */
-  --color-success: 74 222 128;           /* green-400  */
-  --color-info: 56 189 248;              /* sky-400    */
-
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.4);
-  --shadow-md: 0 4px 12px -2px rgb(0 0 0 / 0.5);
-  --shadow-lg: 0 12px 28px -8px rgb(0 0 0 / 0.6);
+  /* Tailwind CSS v3 Compat */
+  --color-background: var(--dark-bg-rgb);
+  --color-foreground: var(--dark-text-rgb);
+  --color-surface: 42 42 42;
+  --color-surface-hover: 50 50 50;
+  --color-muted: 51 51 51;
+  --color-muted-foreground: 224 224 224;
+  --color-border: 68 68 68;
+  --color-ring: var(--primary-orange-rgb);
 }

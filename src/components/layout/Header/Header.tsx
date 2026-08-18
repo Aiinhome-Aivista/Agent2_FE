@@ -9,20 +9,27 @@ import { useAuth } from '@/context/AuthContext';
 import { appConfig } from '@/config/app.config';
 import { incidentApi } from '@/services/api/endpoints';
 import { Incident } from '@/types';
-
+import { useToast } from '@/hooks/useToast';
 // import { cn } from '@/utils/cn';
 
 interface HeaderProps {
   onMenuClick?: () => void;
 }
 
-const PendingAssignmentItem = ({ incident, onRespond }: { incident: Incident, onRespond: (id: string, accept: boolean) => void }) => {
+const PendingAssignmentItem = ({ incident, onRespond }: { incident: any, onRespond: (id: string, accept: boolean) => void }) => {
   const [expanded, setExpanded] = useState(false);
   const isLong = incident.description && incident.description.length > 60;
 
   return (
     <div className="p-3 border-b border-border hover:bg-surface-hover transition-colors">
-      <p className="text-xs font-semibold text-primary mb-1">Ticket #{incident.id}</p>
+      <div className="flex justify-between items-start mb-1">
+        <p className="text-xs font-semibold text-primary">Ticket #{incident.id}</p>
+        <span className="text-[10px] text-muted-foreground whitespace-nowrap ml-2">
+          {new Date(incident.createdAt || incident.created_at || new Date()).toLocaleString('en-US', {
+            month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+          })}
+        </span>
+      </div>
       <p className="text-sm font-medium text-foreground">{incident.subject}</p>
       <div className="mt-1 mb-2">
         <p className={`text-xs text-muted-foreground ${!expanded ? 'line-clamp-1' : ''}`}>
@@ -70,6 +77,8 @@ export function Header({ onMenuClick }: HeaderProps) {
   const [newAdminPopup, setNewAdminPopup] = useState<any | null>(null);
 
   useEffect(() => {
+    let audioInterval: NodeJS.Timeout | null = null;
+
     const playSound = () => {
       try {
         const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -116,7 +125,12 @@ export function Header({ onMenuClick }: HeaderProps) {
     const fetchPending = async () => {
       try {
         const data = await incidentApi.getPendingAssignments();
-        setPendingAssignments(data);
+        const sortedData = data.sort((a, b) => {
+          const dateA = new Date(a.created_at || a.createdAt || 0).getTime();
+          const dateB = new Date(b.created_at || b.createdAt || 0).getTime();
+          return dateB - dateA;
+        });
+        setPendingAssignments(sortedData);
       } catch (err) {
         console.error('Failed to fetch pending assignments', err);
       }
@@ -128,9 +142,11 @@ export function Header({ onMenuClick }: HeaderProps) {
     }
   }, [user]);
 
+  const { toast } = useToast();
   const seenAdminNotifsRef = useRef<Set<number>>(new Set());
 
   useEffect(() => {
+    let audioInterval: NodeJS.Timeout | null = null;
     const playSound = () => {
       try {
         const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -155,7 +171,12 @@ export function Header({ onMenuClick }: HeaderProps) {
       if (user?.role !== 'admin') return;
       try {
         const data = await incidentApi.getAdminNotifications();
-        setAdminNotifications(data);
+        const sortedData = data.sort((a, b) => {
+          const dateA = new Date(a.created_at || a.timestamp || 0).getTime();
+          const dateB = new Date(b.created_at || b.timestamp || 0).getTime();
+          return dateB - dateA;
+        });
+        setAdminNotifications(sortedData);
         
         const newNotifs = data.filter((n) => !seenAdminNotifsRef.current.has(n.id));
         if (newNotifs.length > 0) {
@@ -172,7 +193,12 @@ export function Header({ onMenuClick }: HeaderProps) {
 
     if (user?.role === 'admin') {
       incidentApi.getAdminNotifications().then((data) => {
-        setAdminNotifications(data);
+        const sortedData = data.sort((a, b) => {
+          const dateA = new Date(a.created_at || a.timestamp || 0).getTime();
+          const dateB = new Date(b.created_at || b.timestamp || 0).getTime();
+          return dateB - dateA;
+        });
+        setAdminNotifications(sortedData);
         data.forEach(n => seenAdminNotifsRef.current.add(n.id));
       });
       const interval = setInterval(fetchAdminNotifications, 5000);
@@ -280,9 +306,16 @@ export function Header({ onMenuClick }: HeaderProps) {
                     ) : (
                       adminNotifications.filter(n => !clearedNotifIds.has(n.id)).map((notif) => (
                         <div key={notif.id} className="p-3 border-b border-border hover:bg-surface-hover transition-colors">
-                          <div className="flex items-center gap-2 mb-1">
-                            {notif.action.includes('Declined') ? <XCircle className="w-4 h-4 text-critical" /> : <CheckCircle2 className="w-4 h-4 text-success" />}
-                            <p className="text-xs font-semibold text-primary">Ticket #{notif.incident_id}</p>
+                          <div className="flex justify-between items-start mb-1">
+                            <div className="flex items-center gap-2">
+                              {notif.action.includes('Declined') ? <XCircle className="w-4 h-4 text-critical" /> : <CheckCircle2 className="w-4 h-4 text-success" />}
+                              <p className="text-xs font-semibold text-primary">Ticket #{notif.incident_id}</p>
+                            </div>
+                            <span className="text-[10px] text-muted-foreground whitespace-nowrap ml-2">
+                              {new Date(notif.created_at || notif.timestamp || new Date()).toLocaleString('en-US', {
+                                month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                              })}
+                            </span>
                           </div>
                           <p className="text-sm font-medium text-foreground mb-1">{notif.message}</p>
                           <p className="text-xs text-muted-foreground line-clamp-1">{notif.subject}</p>

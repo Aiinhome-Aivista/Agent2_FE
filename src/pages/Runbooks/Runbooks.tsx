@@ -8,19 +8,19 @@ import {
   Search,
   Trash2,
   Layers,
-
+  XCircle,
 } from 'lucide-react';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { PageSpinner } from '@/components/ui/Spinner';
+import { PageSpinner, Spinner } from '@/components/ui/Spinner';
 import { CreateContentModal } from '@/components/shared/CreateContentModal';
 import { Sheet } from '@/components/ui/Sheet';
-import { FileText, Download, Archive } from 'lucide-react';
+import { FileText, Download, Archive, Edit3 } from 'lucide-react';
 import { runbookApi } from '@/services/api/endpoints';
-import { formatRelativeTime } from '@/utils/formatters';
+import { formatDuration, formatRelativeTime } from '@/utils/formatters';
 import { cn } from '@/utils/cn';
 import { Table, THead, TBody, TR, TH, TD } from '@/components/ui/Table';
 import type { Runbook } from '@/types';
@@ -29,7 +29,7 @@ import { useToast } from '@/hooks/useToast';
 import { ConfirmationModal } from '@/components/shared/ConfirmationModal';
 
 type FilterTab = 'ALL' | 'ACTIVE' | 'PROCESSING' | 'FAILED' | 'ARCHIVED';
-
+type DetailTab = 'steps';
 
 export default function Runbooks() {
   const [search, setSearch] = useState('');
@@ -37,6 +37,7 @@ export default function Runbooks() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'Runbook' | 'Article'>('Runbook');
   const [selectedRunbook, setSelectedRunbook] = useState<Runbook | null>(null);
+  const [activeDetailTab, setActiveDetailTab] = useState<DetailTab>('steps');
   const [processedRunbook, setProcessedRunbook] = useState<Runbook | null>(null);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -404,6 +405,7 @@ ${(rb.steps || rb.execution_steps || []).map((s: any, i: number) => `${i + 1}. $
                           <button
                             onClick={() => {
                               setSelectedRunbook(rb);
+                              setActiveDetailTab('steps');
                             }}
                             className="text-[11px] font-bold text-slate-400 hover:text-indigo-600 transition-colors tracking-widest"
                           >
@@ -566,3 +568,29 @@ function StepsTab({ runbook }: { runbook: Runbook }) {
   );
 }
 
+function HistoryTab({ runbookId }: { runbookId: string | number }) {
+  const { data, isLoading } = useQuery({
+    queryKey: ['runbook-executions', runbookId],
+    queryFn: () => runbookApi.executions(runbookId, 20),
+  });
+
+  if (isLoading) return <Spinner size="md" className="py-8" />;
+  if (!data || data.length === 0) return <p className="text-sm text-muted-foreground py-4 text-center">No execution history found.</p>;
+
+  return (
+    <div className="space-y-3">
+      {data.map((ex) => (
+        <div key={ex.executed_at} className="p-4 rounded-lg border border-slate-100 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            {ex.success ? <CheckCircle2 className="h-5 w-5 text-emerald-500" /> : <XCircle className="h-5 w-5 text-rose-500" />}
+            <div>
+              <p className="text-sm font-bold text-slate-800 line-clamp-1">{ex.subject}</p>
+              <p className="text-[10px] text-slate-400 mt-0.5">{formatRelativeTime(ex.executed_at)} · {formatDuration(ex.duration_s || 0)}</p>
+            </div>
+          </div>
+          <Badge variant="outline" className="text-[10px] font-bold">{ex.status}</Badge>
+        </div>
+      ))}
+    </div>
+  );
+}

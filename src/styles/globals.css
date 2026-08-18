@@ -4,8 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 /* ===============================================================
    Base layer — global element resets and defaults
    =============================================================== */
@@ -25,31 +23,31 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-    font-feature-settings:
-      'rlig' 1,
-      'calt' 1,
-      'cv02' 1,
-      'cv03' 1;
+    color: var(--foreground);
+    background-color: var(--background);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
     min-height: 100vh;
+    @apply font-sans;
   }
 
-  /* Scrollbar styling */
+  /* Custom Scrollbars */
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
   }
   ::-webkit-scrollbar-track {
-    @apply bg-transparent;
+    background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    @apply bg-border rounded-full;
-    border: 2px solid transparent;
-    background-clip: padding-box;
+    background-color: var(--border);
+    border-radius: 4px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground;
-    background-clip: padding-box;
+    background-color: var(--secondary-text);
   }
 
   /* Focus visible */
@@ -67,8 +65,106 @@
    Component layer — reusable composed classes
    =============================================================== */
 @layer components {
+  /* Typography Tokens */
+  .font-logo-title {
+    font-size: var(--typo-logo-title-size);
+    font-weight: var(--typo-logo-title-weight);
+    font-family: var(--typo-logo-title-font);
+  }
+  .font-header-subtitle {
+    font-size: var(--typo-header-subtitle-size);
+    font-weight: var(--typo-header-subtitle-weight);
+    font-family: var(--typo-header-subtitle-font);
+  }
+  .font-dropdown-label {
+    font-size: var(--typo-dropdown-size);
+    font-weight: var(--typo-dropdown-weight);
+    font-family: var(--typo-dropdown-font);
+    color: var(--secondary-text);
+  }
+  .font-dropdown-select {
+    font-size: var(--typo-dropdown-size);
+    font-weight: var(--typo-dropdown-weight);
+    font-family: var(--typo-dropdown-font);
+  }
+  .font-btn-get-insight {
+    font-size: var(--typo-btn-get-insight-size);
+    font-weight: var(--typo-btn-get-insight-weight);
+    font-family: var(--typo-btn-get-insight-font);
+    text-transform: uppercase;
+  }
+  .font-main-heading {
+    font-size: var(--typo-main-heading-size);
+    font-weight: var(--typo-main-heading-weight);
+    font-family: var(--typo-main-heading-font);
+  }
+  .font-instruction-text {
+    font-size: var(--typo-instruction-size);
+    font-weight: var(--typo-instruction-weight);
+    font-family: var(--typo-instruction-font);
+    color: var(--secondary-text);
+  }
+  .font-question-pill {
+    font-size: var(--typo-question-pill-size);
+    font-weight: var(--typo-question-pill-weight);
+    font-family: var(--typo-question-pill-font);
+  }
+  .font-chat-input {
+    font-size: var(--typo-chat-input-size);
+    font-weight: var(--typo-chat-input-weight);
+    font-family: var(--typo-chat-input-font);
+  }
+  .font-footer-text {
+    font-size: var(--typo-footer-size);
+    font-weight: var(--typo-footer-weight);
+    font-family: var(--typo-footer-font);
+    color: var(--secondary-text);
+  }
+
+  /* UI Utilities */
+  .bg-sidebar-custom {
+    background-color: var(--sidebar);
+  }
+  
+  .btn-orange, .btn-get-insight {
+    background-color: var(--button-orange);
+    color: var(--white);
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    font-size: var(--typo-btn-get-insight-size);
+    font-weight: var(--typo-btn-get-insight-weight);
+    font-family: var(--typo-btn-get-insight-font);
+    text-transform: uppercase;
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
+  .btn-orange:hover, .btn-get-insight:hover {
+    background-color: var(--hover-orange);
+  }
+
   .glass {
-    @apply bg-surface/70 backdrop-blur-xl border border-border;
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Input styles matching tokens */
+  .input-custom {
+    background-color: var(--input);
+    border: 1px solid var(--border);
+    color: var(--foreground);
+    border-radius: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+  }
+  .input-custom:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    border-color: var(--ring);
+    box-shadow: 0 0 0 1px var(--ring);
   }
 
   .gradient-text {
@@ -103,21 +199,7 @@
 
   .text-balance { text-wrap: balance; }
 
-  /* .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  .custom-scrollbar::-webkit-scrollbar-track {
-    @apply bg-transparent;
-  }
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-border/50 rounded-full;
-  }
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    @apply bg-border;
-  } */
   .animate-spin-slow {
     animation: spin 3s linear infinite;
   }
 }
-

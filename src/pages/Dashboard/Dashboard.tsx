@@ -238,7 +238,7 @@ export default function Dashboard() {
                   <PriorityBadge priority={inc.priority} />
                 </div>
                 <div className="col-span-6 sm:col-span-2">
-                  <StatusBadge status={inc.status} assignmentStatus={inc.assignmentStatus} assignment_status={inc.assignment_status} />
+                  <StatusBadge status={inc.status} assignmentStatus={inc.assignmentStatus} assignment_status={inc.assignment_status} assignedTo={inc.assignedTo} />
                 </div>
                 <div className="col-span-12 sm:col-span-2 text-xs text-muted-foreground">
                   {formatRelativeTime(inc.createdAt)}

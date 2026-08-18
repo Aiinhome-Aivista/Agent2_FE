@@ -4,6 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { PageSpinner } from '@/components/ui/Spinner';
 import { appConfig } from '@/config/app.config';
 import type { UserRole } from '@/types';
+import { AppLayout } from '@/components/layout/AppLayout';
 
 interface PrivateRouteProps {
   children: ReactNode;

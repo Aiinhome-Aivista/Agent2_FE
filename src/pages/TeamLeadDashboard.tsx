@@ -10,6 +10,7 @@ interface Engineer {
   id: string;
   full_name: string;
   email: string;
+  job_title?: string;
   active_tickets: number;
 }
 
@@ -74,8 +75,15 @@ export default function TeamLeadDashboard() {
                 engineers.map((engineer) => (
                   <div key={engineer.id} className="flex justify-between items-center p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50">
                     <div>
-                      <div className="font-medium text-gray-900 dark:text-gray-100">{engineer.full_name}</div>
-                      <div className="text-xs text-gray-500">{engineer.email}</div>
+                      <div className="font-medium text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                        {engineer.full_name}
+                        {engineer.job_title && (
+                          <Badge variant="secondary" className="text-[10px] font-normal px-1.5 py-0">
+                            {engineer.job_title}
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">{engineer.email}</div>
                     </div>
                     <div className="flex flex-col items-end">
                       <span className="text-sm text-gray-500 mb-1">Active Tickets</span>
