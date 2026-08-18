@@ -118,7 +118,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
             <Sparkles className="h-4 w-4" />
           </div>
           <div className="flex flex-col leading-tight">
-            <span className="text-sm font-bold text-foreground truncate">
+            <span className="text-sm font-bold text-primary truncate">
               {appConfig.name}
             </span>
             {/* <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
