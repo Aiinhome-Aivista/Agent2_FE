@@ -65,8 +65,20 @@ export default function IncidentQueue() {
       }
 
       if (sortBy === 'createdAt') {
-        v1 = new Date((a as any).createdAt || (a as any).created_at || 0).getTime();
-        v2 = new Date((b as any).createdAt || (b as any).created_at || 0).getTime();
+        const parseTime = (dateStr: any) => {
+          if (!dateStr) return 0;
+          let str = String(dateStr);
+          if (str.includes('T') && !str.endsWith('Z') && !str.includes('+') && !str.includes('-')) {
+            const timePart = str.split('T')[1];
+            if (timePart && !timePart.includes('+') && !timePart.includes('-')) {
+              str += 'Z';
+            }
+          }
+          const d = new Date(str);
+          return isNaN(d.getTime()) ? 0 : d.getTime();
+        };
+        v1 = parseTime((a as any).createdAt || (a as any).created_at);
+        v2 = parseTime((b as any).createdAt || (b as any).created_at);
       }
 
       if (v1 < v2) return sortOrder === 'asc' ? -1 : 1;
