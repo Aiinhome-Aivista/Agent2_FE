@@ -37,14 +37,16 @@ export default function IncidentQueue() {
   const debouncedSearch = useDebounce(search, 300);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['incidents', { debouncedSearch, status, priority, page }],
+    queryKey: ['incidents', { debouncedSearch, status, priority, page, sortBy, sortOrder }],
     queryFn: () =>
       incidentApi.list({
         search: debouncedSearch || undefined,
         status: status || undefined,
         priority: priority || undefined,
-        pageSize: 5,
+        pageSize: 6,
         page,
+        sortBy,
+        sortOrder,
       }),
     refetchInterval: 15_000,
   });
