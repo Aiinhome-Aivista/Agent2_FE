@@ -78,7 +78,7 @@ function NavList({ onItemClick }: { onItemClick?: () => void }) {
               "hover:bg-surface-hover",
               isActive
                 ? "bg-primary/10 text-primary shadow-sm"
-                : "text-muted-foreground hover:text-foreground",
+                : "text-slate-300 hover:text-white",
             )
           }
         >
@@ -90,7 +90,7 @@ function NavList({ onItemClick }: { onItemClick?: () => void }) {
                     "h-4 w-4 transition-colors shrink-0",
                     isActive
                       ? "text-primary"
-                      : "text-muted-foreground group-hover:text-foreground",
+                      : "text-slate-400 group-hover:text-white",
                   )}
                 />
                 <span>{label}</span>
@@ -112,7 +112,7 @@ function NavList({ onItemClick }: { onItemClick?: () => void }) {
 function SidebarContent({ onClose }: { onClose?: () => void }) {
   return (
     <div className="flex h-full flex-col">
-      <div className="flex h-14 items-center justify-between gap-2 border-b border-border px-5">
+      <div className="flex h-14 items-center justify-between gap-2 border-b border-white/10 px-5">
         <div className="flex items-center gap-2 overflow-hidden">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-primary to-accent text-primary-foreground shadow-soft-sm">
             <Sparkles className="h-4 w-4" />
@@ -130,7 +130,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
           <button
             type="button"
             onClick={onClose}
-            className="lg:hidden inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-surface-hover"
+            className="lg:hidden inline-flex h-8 w-8 items-center justify-center rounded-md text-slate-300 hover:bg-white/10 hover:text-white"
           >
             <X className="h-4 w-4" />
           </button>
@@ -139,11 +139,11 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
 
       <NavList onItemClick={onClose} />
 
-      <div className="p-3 border-t border-border">
+      <div className="p-3 border-t border-white/10">
         <div className="rounded-lg border border-primary/30 bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 p-3 transition-all">
           <div className="flex items-center gap-2 mb-1">
             <Sparkles className="h-3.5 w-3.5 text-primary" />
-            <p className="text-xs font-semibold text-foreground">
+            <p className="text-xs font-semibold text-slate-200">
               AI Agent Active
             </p>
           </div>
@@ -161,7 +161,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
   return (
     <>
       {/* Desktop */}
-      <aside className="hidden lg:flex lg:w-64 lg:flex-col border-r border-border bg-surface">
+      <aside className="hidden lg:flex lg:w-64 lg:flex-col border-r border-border bg-sidebar-custom">
         <SidebarContent />
       </aside>
 
@@ -181,7 +181,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "tween", duration: 0.25 }}
-              className="lg:hidden fixed top-0 left-0 bottom-0 z-50 w-64 bg-surface border-r border-border"
+              className="lg:hidden fixed top-0 left-0 bottom-0 z-50 w-64 bg-sidebar-custom border-r border-border"
             >
               <SidebarContent onClose={onClose} />
             </motion.aside>

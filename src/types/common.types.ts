@@ -76,6 +76,7 @@ export interface Incident {
   subcategory?: string;
   assignedTo?: string;
   assignedToName?: string;
+  assigned_to_role?: string;
   assignmentStatus?: string;
   assignment_status?: string;
   slaDeadline?: string;

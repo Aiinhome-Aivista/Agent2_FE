@@ -246,6 +246,7 @@ export default function IncidentQueue() {
                         <TH className="px-4 py-3">Category</TH>
                         <TH className="px-4 py-3">Caller</TH>
                         <TH className="px-4 py-3">Assigned</TH>
+                        <TH className="px-4 py-3">Role</TH>
                         {/* <TH className="text-right px-4 py-3">Confidence</TH> */}
                         <TH
                           className="text-right cursor-pointer hover:text-foreground transition-colors group px-4 py-3"
@@ -295,6 +296,9 @@ export default function IncidentQueue() {
                             ) : (
                               <span className="text-muted-foreground italic text-xs">Unassigned</span>
                             )}
+                          </TD>
+                          <TD className="text-sm text-slate-600 px-4 py-4 whitespace-nowrap">
+                            {inc.assigned_to_role || '-'}
                           </TD>
                           {/* <TD className="text-right tabular-nums text-sm font-medium px-4 py-4">
                             {Math.round(inc.confidence * 100)}%
