@@ -3,7 +3,7 @@
  * so renaming a backend route is a one-line change.
  */
 export const apiConfig = {
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://187.127.163.17:3020/api/v1',
   timeout: Number(import.meta.env.VITE_API_TIMEOUT) || 30_000,
   retry: { attempts: 3, delayMs: 800 },
   endpoints: {
