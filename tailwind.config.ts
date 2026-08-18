@@ -39,6 +39,19 @@ const config: Config = {
         warning: 'rgb(var(--color-warning) / <alpha-value>)',
         success: 'rgb(var(--color-success) / <alpha-value>)',
         info: 'rgb(var(--color-info) / <alpha-value>)',
+        
+        // Custom Brand Palette
+        'primary-orange': 'var(--primary-orange)',
+        'button-orange': 'var(--button-orange)',
+        'hover-orange': 'var(--hover-orange)',
+        'sidebar-custom': 'var(--sidebar-bg)',
+        'light-bg': 'var(--light-bg)',
+        'input-bg': 'var(--input-bg)',
+        'light-border': 'var(--light-border)',
+        'orange-border': 'var(--orange-border)',
+        'primary-text': 'var(--primary-text)',
+        'secondary-text': 'var(--secondary-text)',
+        placeholder: 'var(--placeholder-color)',
       },
       borderRadius: {
         sm: 'var(--radius-sm)',
@@ -47,8 +60,10 @@ const config: Config = {
         xl: 'var(--radius-xl)',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        mono: ['JetBrains Mono', 'Menlo', 'monospace'],
+        sans: ['var(--font-sans)', 'sans-serif'],
+        mono: ['var(--font-mono)', 'monospace'],
+        heading: ['var(--font-family-heading)', 'sans-serif'],
+        body: ['var(--font-family-body)', 'sans-serif'],
       },
       boxShadow: {
         'soft-sm': 'var(--shadow-sm)',
