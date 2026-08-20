@@ -3,7 +3,7 @@ import { cn } from '@/utils/cn';
 
 export function Table({ className, ...rest }: HTMLAttributes<HTMLTableElement>) {
   return (
-    <div className="relative w-full overflow-x-auto rounded-lg border border-border bg-surface">
+    <div className="relative w-full overflow-x-auto rounded-lg border border-muted bg-surface">
       <table className={cn('w-full caption-bottom text-sm', className)} {...rest} />
     </div>
   );
@@ -13,7 +13,7 @@ export function THead(props: HTMLAttributes<HTMLTableSectionElement>) {
   return (
     <thead
       {...props}
-      className={cn('bg-muted/40 [&_tr]:border-b border-border', props.className)}
+      className={cn('bg-muted/40 [&_tr]:border-b border-muted', props.className)}
     />
   );
 }
@@ -29,7 +29,7 @@ export function TR(props: HTMLAttributes<HTMLTableRowElement>) {
     <tr
       {...props}
       className={cn(
-        'border-b border-border transition-colors hover:bg-surface-hover/40',
+        'border-b border-muted transition-colors hover:bg-surface-hover even:bg-surface-hover/30',
         props.className,
       )}
     />

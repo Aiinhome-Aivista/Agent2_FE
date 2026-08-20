@@ -103,14 +103,14 @@ export default function IncidentQueue() {
       noScroll
       actions={
         <div className="flex items-center gap-4">
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-slate-50 rounded-full border border-slate-100">
-            <RefreshCw className="h-3 w-3 text-blue-500 animate-spin-slow" />
-            <span className="text-[12px] font-bold tracking-widest text-slate-500 ">
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-background rounded-full border border-border">
+            <RefreshCw className="h-3 w-3 text-primary animate-spin-slow" />
+            <span className="text-[12px] font-bold tracking-widest text-muted-foreground ">
               Refreshing in {nextRefresh}s
             </span>
           </div>
-          <Badge variant="success" className="gap-1.5 px-2 py-1 bg-emerald-50 text-emerald-600 border-emerald-100">
-            <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <Badge variant="success" className="gap-1.5 px-2 py-1 bg-success/10 text-success border-success/30">
+            <span className="flex h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
             LIVE
           </Badge>
         </div>
@@ -118,7 +118,7 @@ export default function IncidentQueue() {
     >
       <div className="h-full flex flex-col space-y-6 overflow-hidden">
         
-        <Card className="flex-1 flex flex-col min-h-0 overflow-hidden shadow-soft-sm bg-white">
+        <Card className="flex-1 flex flex-col min-h-0 overflow-hidden shadow-soft-sm bg-card">
           <div className="p-4 border-b border-border flex-none">
             <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
               <div className="relative w-full max-w-md">
@@ -127,7 +127,7 @@ export default function IncidentQueue() {
                   placeholder="Search by subject, caller, ID..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="pl-9 h-10 border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                  className="pl-9 h-10 border-border focus:border-primary focus:ring-primary"
                 />
               </div>
               <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
@@ -157,7 +157,7 @@ export default function IncidentQueue() {
                   className="w-[140px] h-10"
                 />
                 
-                <div className="flex items-center gap-2 bg-slate-50 p-1 rounded-lg border border-slate-200">
+                <div className="flex items-center gap-2 bg-card p-1 rounded-lg border border-border">
                   <Select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
@@ -166,16 +166,16 @@ export default function IncidentQueue() {
                       { label: 'Sort: Priority', value: 'priority' },
                       { label: 'Sort: Confidence', value: 'confidence' },
                     ]}
-                    className="w-[140px] h-8 border-none bg-transparent shadow-none"
+                    className="w-[140px] h-8 border-none bg-input shadow-none"
                   />
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-                    className="h-8 w-8 p-0 hover:bg-white hover:shadow-sm"
+                    className="h-8 w-8 p-0 hover:bg-card hover:shadow-sm"
                     title={sortOrder === 'asc' ? 'Sort Ascending' : 'Sort Descending'}
                   >
-                    {sortOrder === 'asc' ? <SortAsc className="h-4 w-4 text-blue-600" /> : <SortDesc className="h-4 w-4 text-blue-600" />}
+                    {sortOrder === 'asc' ? <SortAsc className="h-4 w-4 text-primary" /> : <SortDesc className="h-4 w-4 text-primary" />}
                   </Button>
                 </div>
 
@@ -189,7 +189,7 @@ export default function IncidentQueue() {
                     setSortBy('createdAt');
                     setSortOrder('desc');
                   }}
-                  className="h-10 px-4 font-bold tracking-widest text-[10px] text-slate-500 border-slate-200"
+                  className="h-10 px-4 font-bold tracking-widest text-[10px] text-muted-foreground border-border"
                 >
                   CLEAR
                 </Button>
@@ -210,9 +210,9 @@ export default function IncidentQueue() {
               />
             ) : (
               <>
-                <div className="flex-1 overflow-auto min-h-0 scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent">
+                <div className="flex-1 overflow-auto min-h-0 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
                   <Table className="border-none border-separate border-spacing-0">
-                    <THead className="bg-slate-50 border-b border-slate-100 sticky top-0 z-20 shadow-sm">
+                    <THead className="bg-surface border-b border-border sticky top-0 z-20 shadow-sm">
                       <TR>
                         <TH 
                           className="cursor-pointer hover:text-foreground transition-colors group px-4 py-3"
@@ -265,7 +265,7 @@ export default function IncidentQueue() {
                     </THead>
                     <TBody>
                       {sortedItems.map((inc) => (
-                        <TR key={inc.id} className="cursor-pointer hover:bg-slate-50/50 transition-colors">
+                        <TR key={inc.id} className="cursor-pointer hover:bg-surface-hover transition-colors">
                           <TD className="font-mono text-xs text-muted-foreground px-4 py-4">
                             <Link to={`/incidents/${inc.id}`} className="hover:text-primary">
                               {inc.id}
@@ -292,12 +292,12 @@ export default function IncidentQueue() {
                           <TD className="text-sm px-4 py-4 whitespace-nowrap">{inc.caller}</TD>
                           <TD className="text-sm px-4 py-4 whitespace-nowrap">
                             {inc.assignedToName ? (
-                              <span className="font-medium text-slate-700">{inc.assignedToName}</span>
+                              <span className="font-medium text-foreground">{inc.assignedToName}</span>
                             ) : (
                               <span className="text-muted-foreground italic text-xs">Unassigned</span>
                             )}
                           </TD>
-                          <TD className="text-sm text-slate-600 px-4 py-4 whitespace-nowrap">
+                          <TD className="text-sm text-muted-foreground px-4 py-4 whitespace-nowrap">
                             {inc.assigned_to_role || '-'}
                           </TD>
                           {/* <TD className="text-right tabular-nums text-sm font-medium px-4 py-4">
@@ -313,8 +313,8 @@ export default function IncidentQueue() {
                 </div>
 
                 {/* Pagination Footer */}
-                <div className="p-6 border-t border-border flex items-center justify-between bg-white flex-none">
-                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                <div className="p-2 border-t border-border flex items-center justify-between bg-card flex-none">
+                  <div className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
                     Page {page} of {Math.ceil((data?.total || 0) / 6)} — {(data?.total || 0)} Total
                   </div>
                   <div className="flex items-center gap-2">
@@ -323,7 +323,7 @@ export default function IncidentQueue() {
                       size="sm"
                       onClick={() => setPage(p => Math.max(1, p - 1))}
                       disabled={page === 1}
-                      className="h-8 text-[10px] font-bold tracking-widest px-3 border-slate-200"
+                      className="h-8 text-[10px] font-bold tracking-widest px-3 border-border"
                     >
                       PREVIOUS
                     </Button>
@@ -332,7 +332,7 @@ export default function IncidentQueue() {
                       size="sm"
                       onClick={() => setPage(p => p + 1)}
                       disabled={!data?.hasMore}
-                      className="h-8 text-[10px] font-bold tracking-widest px-3 border-slate-200"
+                      className="h-8 text-[10px] font-bold tracking-widest px-3 border-border"
                     >
                       NEXT
                     </Button>

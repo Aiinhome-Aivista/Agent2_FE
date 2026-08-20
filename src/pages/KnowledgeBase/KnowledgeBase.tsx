@@ -327,7 +327,7 @@ TAGS: ${article.tags?.join(', ') || 'None'}
                 </THead>
                 <TBody>
                   {filtered.map((article) => (
-                    <TR key={article.id} className="group hover:bg-slate-50/50 transition-colors border-slate-50">
+                    <TR key={article.id} className="group hover:bg-surface/50 transition-colors border-slate-50">
                       <TD className="px-8 py-6">
                         <div className="flex items-center gap-3">
                           <span className="font-bold text-[15px] text-slate-800">{ensureString(article.title)}</span>

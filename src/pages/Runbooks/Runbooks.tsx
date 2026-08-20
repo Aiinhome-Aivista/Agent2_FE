@@ -242,10 +242,10 @@ ${(rb.steps || rb.execution_steps || []).map((s: any, i: number) => `${i + 1}. $
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 flex-none">
           <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2.5 text-slate-900">
-              <BookOpen className="h-7 w-7 text-slate-800" /> Runbooks
+            <h1 className="text-2xl font-bold flex items-center gap-2.5 text-foreground">
+              <BookOpen className="h-7 w-7 text-foreground" /> Runbooks
             </h1>
-            <p className="text-slate-500 text-sm mt-1">
+            <p className="text-muted-foreground text-sm mt-1">
               Upload PDF/DOCX runbooks · stored locally · indexed into the RAG vector store
             </p>
           </div>
@@ -261,7 +261,7 @@ ${(rb.steps || rb.execution_steps || []).map((s: any, i: number) => `${i + 1}. $
             </Button> */}
             <Button
               size="sm"
-              className="bg-blue-600 text-white hover:bg-blue-700 font-bold text-[11px] tracking-widest h-10 px-5 shadow-lg shadow-blue-100"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold text-[11px] tracking-widest h-10 px-5 shadow-lg shadow-primary/20"
               leftIcon={<Plus className="h-4 w-4" />}
               onClick={() => {
                 setModalType('Runbook');
@@ -276,14 +276,14 @@ ${(rb.steps || rb.execution_steps || []).map((s: any, i: number) => `${i + 1}. $
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 flex-none">
           {stats.map((s) => (
-            <Card key={s.label} className="p-6 border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+            <Card key={s.label} className="p-6 border-border shadow-sm hover:shadow-md transition-shadow">
               <div className="flex justify-between items-start">
-                <p className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">
+                <p className="text-[10px] font-bold text-muted-foreground tracking-widest uppercase">
                   {s.label}
                 </p>
                 <div
                   className={cn(
-                    'p-2 rounded-xl bg-white border border-slate-100 shadow-sm',
+                    'p-2 rounded-xl bg-card border border-border shadow-sm',
                     s.color,
                   )}
                 >
@@ -291,8 +291,8 @@ ${(rb.steps || rb.execution_steps || []).map((s: any, i: number) => `${i + 1}. $
                 </div>
               </div>
               <div className="mt-5">
-                <h3 className="text-4xl font-bold text-slate-900">{s.value}</h3>
-                <p className="text-[11px] text-slate-400 mt-2 font-medium italic">
+                <h3 className="text-4xl font-bold text-foreground">{s.value}</h3>
+                <p className="text-[11px] text-muted-foreground mt-2 font-medium italic">
                   {s.sub}
                 </p>
               </div>
@@ -301,10 +301,10 @@ ${(rb.steps || rb.execution_steps || []).map((s: any, i: number) => `${i + 1}. $
         </div>
 
         {/* Filter/Search Bar */}
-        <Card className="p-2 border-slate-100 shadow-sm flex-none">
+        <Card className="p-2 border-border shadow-sm flex-none">
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <div className="relative flex-1 w-full">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search runbooks, tags, or descriptions..."
                 className="pl-11 border-none shadow-none focus-visible:ring-0 bg-transparent text-sm h-11"
@@ -321,8 +321,8 @@ ${(rb.steps || rb.execution_steps || []).map((s: any, i: number) => `${i + 1}. $
                     className={cn(
                       'px-4 py-1.5 text-[10px] font-bold rounded-lg transition-all whitespace-nowrap tracking-widest',
                       filterTab === tab
-                        ? 'bg-blue-600 text-white shadow-lg shadow-blue-100'
-                        : 'text-slate-400 hover:text-blue-600 hover:bg-blue-50/50',
+                        ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
+                        : 'text-muted-foreground hover:text-primary hover:bg-primary/10',
                     )}
                   >
                     {tab}
@@ -333,59 +333,59 @@ ${(rb.steps || rb.execution_steps || []).map((s: any, i: number) => `${i + 1}. $
           </div>
         </Card>
         {/* Table View */}
-        <Card className="overflow-hidden border-slate-100 shadow-sm rounded-xl flex-1 flex flex-col min-h-0 bg-white">
+        <Card className="overflow-hidden border-border shadow-sm rounded-xl flex-1 flex flex-col min-h-0 bg-card">
           {isLoading ? (
             <div className="flex-1 flex items-center justify-center py-20">
               <PageSpinner />
             </div>
           ) : (
-            <div className="flex-1 overflow-auto min-h-0 scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent">
+            <div className="flex-1 overflow-auto min-h-0 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
               <Table className="border-none border-separate border-spacing-0">
-                <THead className="bg-slate-50 border-b border-slate-100 sticky top-0 z-20 shadow-sm">
+                <THead className="bg-surface border-b border-border sticky top-0 z-20 shadow-sm">
                   <TR className="hover:bg-transparent border-none">
-                    <TH className="px-8 py-5 text-slate-400 text-[10px] tracking-widest font-bold bg-slate-50 sticky top-0 z-20 border-b border-slate-100">RUNBOOK</TH>
-                    <TH className="px-6 py-5 text-slate-400 text-[10px] tracking-widest font-bold bg-slate-50 sticky top-0 z-20 border-b border-slate-100">CATEGORY</TH>
-                    <TH className="px-6 py-5 text-slate-400 text-[10px] tracking-widest font-bold bg-slate-50 sticky top-0 z-20 border-b border-slate-100">SOURCE</TH>
-                    <TH className="px-6 py-5 text-slate-400 text-[10px] tracking-widest font-bold text-center bg-slate-50 sticky top-0 z-20 border-b border-slate-100">CHUNKS</TH>
-                    <TH className="px-6 py-5 text-slate-400 text-[10px] tracking-widest font-bold text-center bg-slate-50 sticky top-0 z-20 border-b border-slate-100">STATUS</TH>
-                    <TH className="px-6 py-5 text-slate-400 text-[10px] tracking-widest font-bold bg-slate-50 sticky top-0 z-20 border-b border-slate-100">UPDATED</TH>
-                    <TH className="px-8 py-5 text-slate-400 text-[10px] tracking-widest font-bold text-right bg-slate-50 sticky top-0 z-20 border-b border-slate-100">ACTIONS</TH>
+                    <TH className="px-8 py-5 text-muted-foreground text-[10px] tracking-widest font-bold bg-surface sticky top-0 z-20 border-b border-border">RUNBOOK</TH>
+                    <TH className="px-6 py-5 text-muted-foreground text-[10px] tracking-widest font-bold bg-surface sticky top-0 z-20 border-b border-border">CATEGORY</TH>
+                    <TH className="px-6 py-5 text-muted-foreground text-[10px] tracking-widest font-bold bg-surface sticky top-0 z-20 border-b border-border">SOURCE</TH>
+                    <TH className="px-6 py-5 text-muted-foreground text-[10px] tracking-widest font-bold text-center bg-surface sticky top-0 z-20 border-b border-border">CHUNKS</TH>
+                    <TH className="px-6 py-5 text-muted-foreground text-[10px] tracking-widest font-bold text-center bg-surface sticky top-0 z-20 border-b border-border">STATUS</TH>
+                    <TH className="px-6 py-5 text-muted-foreground text-[10px] tracking-widest font-bold bg-surface sticky top-0 z-20 border-b border-border">UPDATED</TH>
+                    <TH className="px-8 py-5 text-muted-foreground text-[10px] tracking-widest font-bold text-right bg-surface sticky top-0 z-20 border-b border-border">ACTIONS</TH>
                   </TR>
                 </THead>
                 <TBody>
                   {filtered.map((rb) => (
-                    <TR key={rb.id} className="group hover:bg-slate-50/50 transition-colors border-slate-50">
+                    <TR key={rb.id} className="group hover:bg-surface/50 transition-colors border-border">
                       <TD className="px-8 py-6">
                         <div className="flex items-center gap-3">
-                          <span className="font-bold text-[15px] text-slate-800">
+                          <span className="font-bold text-[15px] text-foreground">
                             {typeof rb.name === 'object' ? 'Unnamed Runbook' : (rb.summary?.name || rb.name || 'Unnamed Runbook')}
                           </span>
                           <Badge
                             variant="outline"
-                            className="bg-blue-50/50 text-blue-600 border-blue-100/50 text-[9px] font-bold px-1.5 h-5 flex items-center justify-center tracking-tighter"
+                            className="bg-primary/10 text-primary border-primary/20 text-[9px] font-bold px-1.5 h-5 flex items-center justify-center tracking-tighter"
                           >
                             RAG
                           </Badge>
                         </div>
-                        <p className="text-xs text-slate-400 mt-1.5 line-clamp-1 max-w-md font-medium">
+                        <p className="text-xs text-muted-foreground mt-1.5 line-clamp-1 max-w-md font-medium">
                           {renderDescription(rb)}
                         </p>
                       </TD>
                       <TD className="px-6 py-6">
-                        <span className="text-[11px] font-bold text-slate-700 tracking-wider uppercase">
+                        <span className="text-[11px] font-bold text-foreground tracking-wider uppercase">
                           {rb.summary?.category || rb.category || 'GENERAL'}
                         </span>
                       </TD>
                       <TD className="px-6 py-6">
                         <Badge
                           variant="outline"
-                          className="text-[10px] font-bold text-slate-500 border-slate-200 bg-white"
+                          className="text-[10px] font-bold text-muted-foreground border-border bg-card"
                         >
                           PDF
                         </Badge>
                       </TD>
                       <TD className="px-6 py-6 text-center">
-                        <span className="text-sm font-bold text-slate-700">35</span>
+                        <span className="text-sm font-bold text-foreground">35</span>
                       </TD>
                       <TD className="px-6 py-6 text-center">
                         <Badge
@@ -396,7 +396,7 @@ ${(rb.steps || rb.execution_steps || []).map((s: any, i: number) => `${i + 1}. $
                         </Badge>
                       </TD>
                       <TD className="px-6 py-6 whitespace-nowrap">
-                        <span className="text-[13px] text-slate-400 font-medium">
+                        <span className="text-[13px] text-muted-foreground font-medium">
                           {formatRelativeTime(rb.updatedAt || rb.lastUpdated || rb.createdAt || new Date())}
                         </span>
                       </TD>
@@ -407,7 +407,7 @@ ${(rb.steps || rb.execution_steps || []).map((s: any, i: number) => `${i + 1}. $
                               setSelectedRunbook(rb);
                               setActiveDetailTab('steps');
                             }}
-                            className="text-[11px] font-bold text-slate-400 hover:text-indigo-600 transition-colors tracking-widest"
+                            className="text-[11px] font-bold text-muted-foreground hover:text-primary transition-colors tracking-widest"
                           >
                             VIEW
                           </button>
@@ -416,7 +416,7 @@ ${(rb.steps || rb.execution_steps || []).map((s: any, i: number) => `${i + 1}. $
                               setItemToDelete(rb);
                               setIsDeleteModalOpen(true);
                             }}
-                            className="text-slate-300 hover:text-rose-500 transition-all transform hover:scale-110"
+                            className="text-muted-foreground/50 hover:text-destructive transition-all transform hover:scale-110"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -441,22 +441,22 @@ ${(rb.steps || rb.execution_steps || []).map((s: any, i: number) => `${i + 1}. $
           selectedRunbook && (
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-100">
+                <div className="p-2.5 rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/20">
                   <FileText className="h-6 w-6" />
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <Badge variant="outline" className="bg-slate-50 text-slate-600 border-slate-200 text-[9px] font-bold px-2 h-5 tracking-widest uppercase">
+                  <Badge variant="outline" className="bg-surface text-muted-foreground border-border text-[9px] font-bold px-2 h-5 tracking-widest uppercase">
                     {selectedRunbook.summary?.category || selectedRunbook.category || 'GENERAL'}
                   </Badge>
 
                 </div>
               </div>
               <div>
-                <h2 className="text-xl font-bold text-slate-900 leading-tight">
+                <h2 className="text-xl font-bold text-foreground leading-tight">
                   {typeof selectedRunbook.name === 'object' ? 'Runbook Details' : (selectedRunbook.summary?.name || selectedRunbook.name || 'Runbook Details')}
                 </h2>
-                <p className="text-[11px] text-slate-400 mt-1.5 font-medium">
-                  Updated by <span className="text-slate-600 font-bold">{selectedRunbook.createdBy || 'system@agenticops.ai'}</span> · {formatRelativeTime(selectedRunbook.updatedAt || selectedRunbook.lastUpdated || new Date())}
+                <p className="text-[11px] text-muted-foreground mt-1.5 font-medium">
+                  Updated by <span className="text-foreground font-bold">{selectedRunbook.createdBy || 'system@agenticops.ai'}</span> · {formatRelativeTime(selectedRunbook.updatedAt || selectedRunbook.lastUpdated || new Date())}
                 </p>
               </div>
             </div>
@@ -478,7 +478,7 @@ ${(rb.steps || rb.execution_steps || []).map((s: any, i: number) => `${i + 1}. $
             </div>
             <Button
               size="sm"
-              className="bg-blue-600 text-white hover:bg-blue-700 text-[10px] font-bold tracking-widest h-10 px-6 shadow-lg shadow-blue-100"
+              className="bg-primary text-primary-foreground hover:bg-primary/90 text-[10px] font-bold tracking-widest h-10 px-6 shadow-lg shadow-primary/20"
               leftIcon={<Download className="h-4 w-4" />}
               onClick={() => selectedRunbook && handleDownloadTxt(selectedRunbook)}
             >
@@ -497,9 +497,9 @@ ${(rb.steps || rb.execution_steps || []).map((s: any, i: number) => `${i + 1}. $
               }
             />
 
-            <div className="space-y-6 pt-6 border-t border-slate-100">
-              <div className="flex items-center gap-2 px-0 py-1 text-[11px] font-bold text-slate-900 tracking-widest uppercase">
-                <BookOpen className="h-4 w-4 text-slate-800" />
+            <div className="space-y-6 pt-6 border-t border-border">
+              <div className="flex items-center gap-2 px-0 py-1 text-[11px] font-bold text-foreground tracking-widest uppercase">
+                <BookOpen className="h-4 w-4 text-foreground" />
                 Execution Steps
               </div>
               <StepsTab runbook={selectedRunbook} />
@@ -550,14 +550,14 @@ function StepsTab({ runbook }: { runbook: Runbook }) {
   return (
     <ol className="space-y-3">
       {steps.map((step) => (
-        <li key={step.order} className="flex gap-4 p-3 rounded-lg border border-slate-100 bg-slate-50/50">
-          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-600 text-white text-[10px] font-bold shadow-sm shadow-blue-100">
+        <li key={step.order} className="flex gap-4 p-3 rounded-lg border border-border bg-surface-hover/30">
+          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground text-[10px] font-bold shadow-sm shadow-primary/20">
             {step.order}
           </span>
           <div className="flex-1">
-            <p className="text-sm font-bold text-slate-800">{step.title}</p>
+            <p className="text-sm font-bold text-foreground">{step.title}</p>
             {step.command && (
-              <pre className="mt-2 p-3 rounded bg-blue-950 text-blue-50 text-[11px] font-mono overflow-x-auto border border-blue-900/50">
+              <pre className="mt-2 p-3 rounded bg-muted text-muted-foreground text-[11px] font-mono overflow-x-auto border border-border">
                 {step.command}
               </pre>
             )}
@@ -580,12 +580,12 @@ export function HistoryTab({ runbookId }: { runbookId: string | number }) {
   return (
     <div className="space-y-3">
       {data.map((ex) => (
-        <div key={ex.executed_at} className="p-4 rounded-lg border border-slate-100 flex items-center justify-between gap-4">
+        <div key={ex.executed_at} className="p-4 rounded-lg border border-border flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            {ex.success ? <CheckCircle2 className="h-5 w-5 text-emerald-500" /> : <XCircle className="h-5 w-5 text-rose-500" />}
+            {ex.success ? <CheckCircle2 className="h-5 w-5 text-success" /> : <XCircle className="h-5 w-5 text-destructive" />}
             <div>
-              <p className="text-sm font-bold text-slate-800 line-clamp-1">{ex.subject}</p>
-              <p className="text-[10px] text-slate-400 mt-0.5">{formatRelativeTime(ex.executed_at)} · {formatDuration(ex.duration_s || 0)}</p>
+              <p className="text-sm font-bold text-foreground line-clamp-1">{ex.subject}</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">{formatRelativeTime(ex.executed_at)} · {formatDuration(ex.duration_s || 0)}</p>
             </div>
           </div>
           <Badge variant="outline" className="text-[10px] font-bold">{ex.status}</Badge>

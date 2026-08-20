@@ -100,7 +100,7 @@ export function SourceBadge({ source }: { source: Source }) {
   const Icon = config.icon;
 
   return (
-    <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-slate-50 border border-slate-100 text-[10px] font-bold text-slate-500 uppercase tracking-tight">
+    <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-card border border-border text-[10px] font-bold text-slate-500 uppercase tracking-tight">
       <Icon className="h-3 w-3" />
       {config.label}
     </div>

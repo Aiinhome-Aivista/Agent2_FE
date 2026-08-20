@@ -43,11 +43,11 @@ export default function IncidentLoop() {
 
   return (
     <PageWrapper bare noScroll>
-      <div className="flex h-full bg-white overflow-hidden">
+      <div className="flex h-full bg-background overflow-hidden">
         {/* Incident List Sidebar */}
-        <div className="w-[350px] flex flex-col border-r border-slate-100 h-full bg-white shrink-0">
+        <div className="w-[350px] flex flex-col border-r border-border h-full bg-card shrink-0">
           {/* Tabs */}
-          <div className="p-4 border-b border-slate-50 flex items-center justify-between gap-1">
+          <div className="p-4 border-b border-border flex items-center justify-between gap-1">
             {(['OPEN', 'ALL', 'CLOSED'] as Tab[]).map((tab) => (
               <button
                 key={tab}
@@ -59,8 +59,8 @@ export default function IncidentLoop() {
                 className={cn(
                   "flex-1 py-1.5 text-[10px] font-bold tracking-widest transition-all rounded-md",
                   activeTab === tab
-                    ? "bg-slate-900 text-white shadow-md shadow-slate-200"
-                    : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"
+                    ? "bg-foreground text-background shadow-md shadow-border"
+                    : "text-muted-foreground hover:text-foreground hover:bg-surface-hover/50"
                 )}
               >
                 {tab}
@@ -70,46 +70,46 @@ export default function IncidentLoop() {
 
           {/* List Content */}
           <div className="flex-1 overflow-y-auto custom-scrollbar">
-            <div className="px-4 py-3 bg-slate-50/50 flex items-center justify-between">
-              <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">
+            <div className="px-4 py-3 bg-surface-hover/30 flex items-center justify-between">
+              <span className="text-[10px] font-bold text-muted-foreground tracking-widest uppercase">
                 {isLoading ? 'Loading...' : `${data?.total || 0} Incidents`}
               </span>
               {!isLoading && data && (
-                <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">
+                <span className="text-[10px] font-bold text-muted-foreground tracking-widest uppercase">
                   Page {page} of {Math.ceil((data.total || 0) / 5) || 1}
                 </span>
               )}
             </div>
 
-            <div className="divide-y divide-slate-50">
+            <div className="divide-y divide-border">
               {incidents.map((inc) => (
                 <div
                   key={inc.id}
                   onClick={() => setSelectedIncident(inc)}
                   className={cn(
-                    "p-5 cursor-pointer transition-all hover:bg-slate-50 group relative",
-                    selectedIncident?.id === inc.id && "bg-slate-50 border-l-4 border-slate-900 pl-4"
+                    "p-5 cursor-pointer transition-all hover:bg-surface-hover group relative",
+                    selectedIncident?.id === inc.id && "bg-surface-hover border-l-4 border-primary pl-4"
                   )}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-bold text-blue-600 tracking-wider">#{inc.id.slice(-2)}</span>
+                    <span className="text-[10px] font-bold text-primary tracking-wider">#{inc.id.slice(-2)}</span>
                     <Badge
                       variant="outline"
                       className={cn(
                         "text-[9px] font-bold px-1.5 h-4 border-none uppercase tracking-tighter",
-                        inc.priority === 'P1' ? "text-rose-500 bg-rose-50" :
-                          inc.priority === 'P2' ? "text-orange-500 bg-orange-50" :
-                            "text-blue-500 bg-blue-50"
+                        inc.priority === 'P1' ? "text-destructive bg-destructive/10" :
+                          inc.priority === 'P2' ? "text-warning bg-warning/10" :
+                            "text-primary bg-primary/10"
                       )}
                     >
                       {inc.priority === 'P1' ? 'CRITICAL' : inc.priority === 'P2' ? 'HIGH' : inc.priority === 'P3' ? 'MEDIUM' : ''}
                     </Badge>
                   </div>
 
-                  <h3 className="text-[13px] font-bold text-slate-900 mb-1.5 leading-tight group-hover:text-blue-600 transition-colors">
+                  <h3 className="text-[13px] font-bold text-foreground mb-1.5 leading-tight group-hover:text-primary transition-colors">
                     {inc.subject}
                   </h3>
-                  <p className="text-[11px] text-slate-400 line-clamp-2 leading-relaxed mb-3 font-medium">
+                  <p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed mb-3 font-medium">
                     {inc.description}
                   </p>
 
@@ -118,14 +118,14 @@ export default function IncidentLoop() {
                       variant="outline"
                       className={cn(
                         "text-[9px] font-bold px-2 h-5 border-none tracking-widest uppercase",
-                        inc.status === 'resolved' ? "bg-emerald-50 text-emerald-600" :
-                          inc.status === 'analyzing' ? "bg-blue-50 text-blue-600" :
-                            "bg-amber-50 text-amber-600"
+                        inc.status === 'resolved' ? "bg-success/10 text-success" :
+                          inc.status === 'analyzing' ? "bg-primary/10 text-primary" :
+                            "bg-warning/10 text-warning"
                       )}
                     >
                       {inc.status.toUpperCase()}
                     </Badge>
-                    <span className="text-[10px] text-slate-300 font-medium">{formatRelativeTime(inc.createdAt)}</span>
+                    <span className="text-[10px] text-muted-foreground font-medium">{formatRelativeTime(inc.createdAt)}</span>
                   </div>
                 </div>
               ))}
@@ -133,13 +133,13 @@ export default function IncidentLoop() {
           </div>
 
           {/* Pagination Footer */}
-          <div className="p-4 border-t border-slate-50 flex items-center justify-between bg-white flex-none">
+          <div className="p-4 border-t border-border flex items-center justify-between bg-card flex-none">
             <Button
               variant="outline"
               size="sm"
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="h-8 text-[9px] font-bold tracking-widest px-3 border-slate-100"
+              className="h-8 text-[9px] font-bold tracking-widest px-3 border-border"
             >
               PREV
             </Button>
@@ -151,7 +151,7 @@ export default function IncidentLoop() {
               size="sm"
               onClick={() => setPage(p => p + 1)}
               disabled={!data?.hasMore}
-              className="h-8 text-[9px] font-bold tracking-widest px-3 border-slate-100"
+              className="h-8 text-[9px] font-bold tracking-widest px-3 border-border"
             >
               NEXT
             </Button>
@@ -159,7 +159,7 @@ export default function IncidentLoop() {
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 relative flex flex-col items-center bg-white overflow-y-auto custom-scrollbar">
+        <div className="flex-1 relative flex flex-col items-center bg-background overflow-y-auto custom-scrollbar">
           {/* Blueprint Grid Background */}
           <div
             className="absolute inset-0 pointer-events-none opacity-[0.03]"
@@ -173,27 +173,27 @@ export default function IncidentLoop() {
             <div className="z-10 pt-6 pb-12 px-12 max-w-4xl w-full animate-in fade-in zoom-in duration-500">
               <div className="text-center mb-6">
                 <div className="relative inline-block mb-4">
-                  <div className="absolute inset-0 bg-blue-500/10 rounded-full blur-2xl animate-pulse" />
-                  <div className="relative w-16 h-16 rounded-[24px] bg-slate-900 flex items-center justify-center text-white mx-auto shadow-xl ring-4 ring-slate-50 transition-transform hover:scale-105 duration-500">
+                  <div className="absolute inset-0 bg-primary/10 rounded-full blur-2xl animate-pulse" />
+                  <div className="relative w-16 h-16 rounded-[24px] bg-foreground flex items-center justify-center text-background mx-auto shadow-xl ring-4 ring-background transition-transform hover:scale-105 duration-500">
                     <RotateCcw className="h-8 w-8 animate-spin-slow" />
                   </div>
                 </div>
                 <div className="flex flex-col items-center gap-2">
-                  <Badge variant="outline" className="bg-blue-50/50 text-blue-600 border-blue-100/30 px-3 py-1 text-[9px] font-bold tracking-[0.2em] uppercase backdrop-blur-sm">
+                  <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30 px-3 py-1 text-[9px] font-bold tracking-[0.2em] uppercase backdrop-blur-sm">
                     LOOP INVESTIGATION ACTIVE
                   </Badge>
-                  <h2 className="text-3xl font-black text-slate-900 tracking-tight leading-none">{selectedIncident.subject}</h2>
+                  <h2 className="text-3xl font-black text-foreground tracking-tight leading-none">{selectedIncident.subject}</h2>
                   <div className="flex items-center gap-3 mt-1">
-                    <span className="text-slate-500 text-[10px] font-mono tracking-widest uppercase">{selectedIncident.id}</span>
-                    <div className="w-1 h-1 rounded-full bg-slate-200" />
+                    <span className="text-muted-foreground text-[10px] font-mono tracking-widest uppercase">{selectedIncident.id}</span>
+                    <div className="w-1 h-1 rounded-full bg-border" />
                     {/* <span className="text-slate-400 text-[9px] font-bold uppercase tracking-widest">Priority: {selectedIncident.severity}</span> */}
                     <Badge
                       variant="outline"
                       className={cn(
                         "text-[9px] font-bold px-1.5 h-4 border-none uppercase tracking-tighter",
-                        selectedIncident.priority === 'P1' ? "text-rose-500 bg-rose-50" :
-                          selectedIncident.priority === 'P2' ? "text-orange-500 bg-orange-50" :
-                            "text-blue-500 bg-blue-50"
+                        selectedIncident.priority === 'P1' ? "text-destructive bg-destructive/10" :
+                          selectedIncident.priority === 'P2' ? "text-warning bg-warning/10" :
+                            "text-primary bg-primary/10"
                       )}
                     >
                       {selectedIncident.priority === 'P1' ? 'CRITICAL' : selectedIncident.priority === 'P2' ? 'HIGH' : selectedIncident.priority === 'P3' ? 'MEDIUM' : ''}
@@ -203,9 +203,9 @@ export default function IncidentLoop() {
               </div>
 
               {/* Flipkart Style Status Stepper */}
-              <div className="bg-white/70 backdrop-blur-3xl rounded-[40px] p-12 border border-slate-100 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.06)] relative overflow-hidden group">
+              <div className="bg-card/70 backdrop-blur-3xl rounded-[40px] p-12 border border-border shadow-[0_32px_64px_-12px_rgba(0,0,0,0.06)] relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-8 opacity-[0.015] group-hover:opacity-[0.03] transition-all duration-700 pointer-events-none translate-x-4 -translate-y-4">
-                  <Shield className="h-48 w-48 text-slate-900" />
+                  <Shield className="h-48 w-48 text-foreground" />
                 </div>
 
                 <div className="space-y-8 relative z-10">
@@ -282,11 +282,11 @@ export default function IncidentLoop() {
                             <div className="space-y-8 relative z-10">
                               {summary && summary !== step.output && (
                                 <div>
-                                  <div className="text-[9px] font-black text-slate-600 uppercase tracking-widest mb-3 flex items-center gap-2">
-                                    <FileText className="h-3 w-3 text-slate-500" />
+                                  <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-3 flex items-center gap-2">
+                                    <FileText className="h-3 w-3 text-muted-foreground" />
                                     Email Content Summary
                                   </div>
-                                  <div className="text-[13px] leading-relaxed text-slate-300 font-medium bg-white/5 p-4 rounded-2xl border border-white/5 italic">
+                                  <div className="text-[13px] leading-relaxed text-muted-foreground font-medium bg-white/5 p-4 rounded-2xl border border-white/5 italic">
                                     "{summary}"
                                   </div>
                                 </div>
@@ -294,8 +294,8 @@ export default function IncidentLoop() {
 
                               {incidentEmails.length > 0 ? (
                                 <div>
-                                  <div className="text-[9px] font-black text-slate-600 uppercase tracking-widest mb-3 flex items-center gap-2">
-                                    <Mail className="h-3 w-3 text-slate-500" />
+                                  <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-3 flex items-center gap-2">
+                                    <Mail className="h-3 w-3 text-muted-foreground" />
                                     Dispatched Emails ({incidentEmails.length})
                                   </div>
                                   <div className="space-y-3">
@@ -309,7 +309,7 @@ export default function IncidentLoop() {
                                             )}>
                                               {email.status}
                                             </Badge>
-                                            <span className="text-[10px] text-slate-500 font-mono tracking-wider">
+                                            <span className="text-[10px] text-muted-foreground font-mono tracking-wider">
                                               {formatTime(email.sent_at || email.created_at)}
                                             </span>
                                           </div>
@@ -348,7 +348,7 @@ export default function IncidentLoop() {
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                                   {step.output.includes('Recipient:') && (
                                     <div className="md:col-span-1">
-                                      <div className="text-[9px] font-black text-slate-600 uppercase tracking-widest mb-2">Recipient</div>
+                                      <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-2">Recipient</div>
                                       <div className="text-[12px] text-blue-400 font-mono bg-blue-400/5 px-3 py-2 rounded-xl border border-blue-400/10 truncate">
                                         {lines.find((l: string) => l.startsWith('Recipient:'))?.replace('Recipient:', '').trim()}
                                       </div>
@@ -356,7 +356,7 @@ export default function IncidentLoop() {
                                   )}
                                   {!summary && (
                                     <div className="md:col-span-2">
-                                      <div className="text-[9px] font-black text-slate-600 uppercase tracking-widest mb-2">Body Summary</div>
+                                      <div className="text-[9px] font-black text-muted-foreground uppercase tracking-widest mb-2">Body Summary</div>
                                       <div className="text-[13px] leading-relaxed text-slate-300 font-medium bg-white/5 p-4 rounded-2xl border border-white/5 italic">
                                         "{step.output}"
                                       </div>
@@ -377,7 +377,7 @@ export default function IncidentLoop() {
                           .replace(/ · Confidence: [\d.]+%?/, '');
                       }
 
-                      return <p className="text-[11px] text-slate-400 font-medium leading-relaxed mt-1">{output}</p>;
+                      return <p className="text-[11px] text-muted-foreground font-medium leading-relaxed mt-1">{output}</p>;
                     };
 
                     return displaySteps.map((step, idx) => {
@@ -410,16 +410,16 @@ export default function IncidentLoop() {
                           <div className="flex-1 -mt-1">
                             <div className="flex items-center justify-between gap-4 mb-1">
                               <div className="flex items-center gap-2">
-                                <h4 className="text-[13px] font-bold tracking-tight text-slate-900">
+                                <h4 className="text-[13px] font-bold tracking-tight text-foreground">
                                   {step.action.toLowerCase().includes('email')
                                     ? (selectedIncident.priority === 'P1' ? ' Email Notification' : ' Email Notification')
                                     : step.action}
                                 </h4>
-                                <Badge variant="outline" className="text-[8px] font-bold text-slate-400 bg-slate-50 border-none px-1.5 h-4">
+                                <Badge variant="outline" className="text-[8px] font-bold text-muted-foreground bg-surface border-none px-1.5 h-4">
                                   {step.agent}
                                 </Badge>
                               </div>
-                              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{formatTime(step.timestamp)}</span>
+                              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{formatTime(step.timestamp)}</span>
                             </div>
                             {renderStepOutput(step)}
                           </div>
@@ -429,7 +429,7 @@ export default function IncidentLoop() {
                   })()}
                 </div>
 
-                <div className="mt-12 pt-8 border-t border-slate-50 flex items-center justify-between">
+                <div className="mt-12 pt-8 border-t border-border flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     {/* <div className="flex -space-x-2">
                         {[1, 2, 3].map(i => (
@@ -449,18 +449,18 @@ export default function IncidentLoop() {
           ) : (
             <div className="z-10 my-auto text-center animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="relative mb-8 flex justify-center">
-                <Shield className="h-24 w-24 text-slate-50" />
+                <Shield className="h-24 w-24 text-muted/30" />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <RotateCcw className="h-8 w-8 text-slate-200 animate-pulse" />
+                  <RotateCcw className="h-8 w-8 text-muted-foreground/30 animate-pulse" />
                 </div>
               </div>
-              <h2 className="text-[13px] font-bold text-slate-400 tracking-[0.2em] mb-3">
+              <h2 className="text-[13px] font-bold text-muted-foreground tracking-[0.2em] mb-3">
                 SELECT AN INCIDENT TO BEGIN INVESTIGATION
               </h2>
-              <p className="text-[10px] font-bold text-slate-300 tracking-[0.15em] flex items-center justify-center gap-4">
-                <span className="w-8 h-px bg-slate-100" />
+              <p className="text-[10px] font-bold text-muted-foreground/50 tracking-[0.15em] flex items-center justify-center gap-4">
+                <span className="w-8 h-px bg-border" />
                 OR INJECT A SYNTHETIC ONE TO WATCH THE LOOP RUN
-                <span className="w-8 h-px bg-slate-100" />
+                <span className="w-8 h-px bg-border" />
               </p>
             </div>
           )}

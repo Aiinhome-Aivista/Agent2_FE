@@ -55,13 +55,13 @@ export default function AutomatedActions() {
           <div className="flex flex-wrap gap-4">
             <button
               onClick={() => { setSelectedEngineer(null); setPage(1); }}
-              className={`flex items-center gap-2 rounded-full py-1.5 px-4 shadow-soft-sm border transition-all ${
+              className={`flex items-center gap-2 rounded-full py-1 px-6 shadow-soft-sm border transition-all ${
                 selectedEngineer === null 
                   ? 'bg-primary text-primary-foreground border-primary' 
                   : 'bg-surface text-foreground border-border hover:bg-surface-hover'
               }`}
             >
-              <span className="text-xs font-semibold">All</span>
+              <span className="text-sm font-semibold">All</span>
             </button>
             {engineers.map((eng: any) => (
               <button 
@@ -106,7 +106,7 @@ export default function AutomatedActions() {
               <Card className="overflow-hidden">
                 <div className="bg-surface-hover px-5 py-3 border-b border-border flex justify-between items-center">
                   <div className="flex items-center gap-3">
-                    <span className="font-mono text-sm font-bold text-foreground bg-background px-2 py-1 rounded-md border border-border">
+                    <span className="font-mono text-sm font-bold text-white bg-primary px-2 py-1 rounded-md border border-border">
                       {incident.id}
                     </span>
                     <span className="text-sm font-medium text-foreground">{incident.subject}</span>
